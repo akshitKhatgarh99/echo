@@ -1,5 +1,6 @@
 import sqlite3
 import aiosqlite
+from telegram.request import HTTPXRequest
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import Application, CallbackContext, ContextTypes, MessageHandler, filters, ConversationHandler, CommandHandler
 from logging.handlers import RotatingFileHandler
@@ -100,11 +101,12 @@ async def chat(update: Update, context: CallbackContext) -> int:
     # Handle audio message
     elif update.message.voice:
         voice_file_id = update.message.voice.file_id
-        file_info = await context.bot.get_file(voice_file_id)
-        url = file_info.file_path
+        file_info = await context.bot.get_file(update.message.voice.file_id)
 
+        url = file_info.file_path
+        request = context.bot_data.get('request')
         # Download the actual audio file
-        audio_data = requests.get(url).content
+        audio_data = request.retrieve(url)
 
         await update.message.reply_voice(voice_file_id)
         context.user_data['last_10_turns'].append({
@@ -137,7 +139,10 @@ async def cancel(update: Update, context: CallbackContext) -> int:
     return ConversationHandler.END
 
 def main():
-    application = Application.builder().token("6352196605:AAFdzmqpYgmn2kM00rNTI_vOrFO08BuVTFg").build()
+    request = HTTPXRequest(connection_pool_size=5, read_timeout=10)
+
+    application = Application.builder().token("6352196605:AAFdzmqpYgmn2kM00rNTI_vOrFO08BuVTFg").request(request).build()
+    application.bot_data['request'] = request
     any_text_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, start) 
     any_voice_handler = MessageHandler(filters.VOICE, start)  # Add this line
 
