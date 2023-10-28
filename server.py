@@ -4,11 +4,32 @@ from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import Application, CallbackContext, ContextTypes, MessageHandler, filters, ConversationHandler, CommandHandler
 from logging.handlers import RotatingFileHandler
 import logging
-
+from datetime import datetime, timezone
+import requests 
 # SQLite Setup
 conn = sqlite3.connect('users.db')
 cursor = conn.cursor()
 cursor.execute("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, phone_number TEXT, state TEXT)")
+conn.commit()
+conn.close()
+
+
+# SQLite Setup
+conn = sqlite3.connect('data.db')
+cursor = conn.cursor()
+
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS chat_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT,
+    timestamp TEXT,
+    is_from_user BOOLEAN,
+    is_audio BOOLEAN,
+    message TEXT,
+    audio_blob BLOB
+);
+''')
+
 conn.commit()
 conn.close()
 
@@ -59,13 +80,57 @@ async def handle_contact(update: Update, context: CallbackContext) -> int:
     return CHAT
 
 async def chat(update: Update, context: CallbackContext) -> int:
+    user_id = update.message.from_user.id
+    timestamp = datetime.now(timezone.utc).isoformat()
+
+    if 'last_10_turns' not in context.user_data:
+        context.user_data['last_10_turns'] = []
+
+    # Handle text message
     if update.message.text:
         await update.message.reply_text(update.message.text)
+        context.user_data['last_10_turns'].append({
+            'timestamp': timestamp,
+            'is_from_user': True,
+            'is_audio': False,
+            'message': update.message.text,
+            'audio_blob': None
+        })
+
+    # Handle audio message
     elif update.message.voice:
         voice_file_id = update.message.voice.file_id
-        await update.message.reply_voice(voice_file_id)
-    return CHAT
+        file_info = await context.bot.get_file(voice_file_id)
+        url = file_info.file_path
 
+        # Download the actual audio file
+        audio_data = requests.get(url).content
+
+        await update.message.reply_voice(voice_file_id)
+        context.user_data['last_10_turns'].append({
+            'timestamp': timestamp,
+            'is_from_user': True,
+            'is_audio': True,
+            'message': None,
+            'audio_blob': audio_data  # Storing the actual audio data
+        })
+
+    # Keep only the last 10 turns
+
+    if len(context.user_data['last_10_turns']) >= 20:
+        async with aiosqlite.connect('data.db') as db:
+            cursor = await db.cursor()
+            # Write the first 10 turns to the database.
+            for turn in context.user_data['last_10_turns'][:10]:
+                await cursor.execute(
+                    'INSERT INTO chat_history (user_id, timestamp, is_from_user, is_audio, message, audio_blob) VALUES (?, ?, ?, ?, ?, ?)',
+                    (user_id, turn['timestamp'], turn['is_from_user'], turn['is_audio'], turn['message'], turn['audio_blob'])
+                )
+            await db.commit()
+        # Keep the last 10 turns in the buffer.
+        context.user_data['last_10_turns'] = context.user_data['last_10_turns'][10:]
+
+    return CHAT
 
 async def cancel(update: Update, context: CallbackContext) -> int:
     await update.message.reply_text('Goodbye!')
@@ -74,8 +139,10 @@ async def cancel(update: Update, context: CallbackContext) -> int:
 def main():
     application = Application.builder().token("6352196605:AAFdzmqpYgmn2kM00rNTI_vOrFO08BuVTFg").build()
     any_text_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, start) 
+    any_voice_handler = MessageHandler(filters.VOICE, start)  # Add this line
+
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start), any_text_handler],
+        entry_points=[CommandHandler('start', start), any_text_handler,any_voice_handler],
         states={
             REQUEST_CONTACT: [MessageHandler(filters.CONTACT, handle_contact)],
             CHAT: [MessageHandler(filters.TEXT | filters.COMMAND | filters.VOICE , chat)]
