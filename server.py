@@ -6,7 +6,10 @@ from telegram.ext import Application, CallbackContext, ContextTypes, MessageHand
 from logging.handlers import RotatingFileHandler
 import logging
 from datetime import datetime, timezone
-import requests 
+import os
+import boto3
+import threading
+import time
 # SQLite Setup
 conn = sqlite3.connect('users.db')
 cursor = conn.cursor()
@@ -42,6 +45,27 @@ log_handler.setFormatter(log_formatter)
 logger = logging.getLogger()
 logger.addHandler(log_handler)
 logger.setLevel(logging.INFO)
+
+
+# # Initialize S3 client
+# s3 = boto3.client('s3', aws_access_key_id='YOUR_ACCESS_KEY',
+#                   aws_secret_access_key='YOUR_SECRET_KEY',
+#                   region_name='YOUR_REGION')
+
+# def upload_to_s3():
+#     while True:
+#         file_size = os.path.getsize('data.db')
+        
+#         if file_size >= 100 * 1024 * 1024:  # Check if file size >= 100MB
+#             try:
+#                 # Upload to S3
+#                 s3.upload_file('data.db', 'your-bucket-name', 'data.db')
+#                 logging.info("Successfully uploaded data.db to S3.")
+#             except Exception as e:
+#                 logging.error(f"Failed to upload data.db to S3: {e}")
+
+#         # Wait for 1 hour before the next upload
+#         time.sleep(3600)
 
 # Define states
 REQUEST_CONTACT, CHAT = range(2)
@@ -157,6 +181,8 @@ def main():
 
     application.add_handler(conv_handler)
     application.run_polling(allowed_updates=Update.ALL_TYPES)
+    # s3_thread = threading.Thread(target=upload_to_s3, daemon=True)
+    # s3_thread.start()
 
 if __name__ == '__main__':
     main()
