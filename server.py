@@ -1,13 +1,16 @@
 import sqlite3
 import aiosqlite
+import openai
 from telegram.request import HTTPXRequest
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import Application, CallbackContext, ContextTypes, MessageHandler, filters, ConversationHandler, CommandHandler
 from logging.handlers import RotatingFileHandler
 import logging
 from datetime import datetime, timezone
+from io import BytesIO
+
 import os
-import boto3
+#import boto3
 import threading
 import time
 # SQLite Setup
@@ -45,6 +48,13 @@ log_handler.setFormatter(log_formatter)
 logger = logging.getLogger()
 logger.addHandler(log_handler)
 logger.setLevel(logging.INFO)
+
+# openai settings
+
+
+openai.organization = "org-qCbrL6UwKFX7ZxBi7EkU5ziS"
+openai.api_key = "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"
+
 
 
 # # Initialize S3 client
@@ -130,15 +140,24 @@ async def chat(update: Update, context: CallbackContext) -> int:
         url = file_info.file_path
         request = context.bot_data.get('request')
         # Download the actual audio file
-        audio_data = request.retrieve(url)
+        audio_data = await request.retrieve(url)
+        audio_file = BytesIO(audio_data)
+        audio_file.name = "audio.mp3"
+
+        transcript_response = await openai.Audio.atranscribe("whisper-1", audio_file ,language = 'hi')
+        transcript_text = transcript_response['text']
+
+        # Reply with transcribed text
+        await update.message.reply_text(transcript_text)
+
 
         await update.message.reply_voice(voice_file_id)
         context.user_data['last_10_turns'].append({
             'timestamp': timestamp,
             'is_from_user': True,
             'is_audio': True,
-            'message': None,
-            'audio_blob': audio_data  # Storing the actual audio data
+            'message': audio_data,
+            'audio_blob': None  # Storing the actual audio data
         })
 
     # Keep only the last 10 turns
