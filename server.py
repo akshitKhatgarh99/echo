@@ -8,7 +8,9 @@ from logging.handlers import RotatingFileHandler
 import logging
 from datetime import datetime, timezone
 from io import BytesIO
-
+from google.oauth2.service_account import Credentials
+from google.cloud import texttospeech
+import json
 import os
 #import boto3
 import threading
@@ -19,6 +21,13 @@ cursor = conn.cursor()
 cursor.execute("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, phone_number TEXT, state TEXT)")
 conn.commit()
 conn.close()
+
+#google TTS
+
+credentials = Credentials.from_service_account_file("credentials.json")
+client = texttospeech.TextToSpeechClient(credentials=credentials)
+
+
 
 
 # SQLite Setup
@@ -124,6 +133,38 @@ async def chat(update: Update, context: CallbackContext) -> int:
     # Handle text message
     if update.message.text:
         await update.message.reply_text(update.message.text)
+        # Google Text-to-Speech API integration
+        input_text = texttospeech.SynthesisInput(text=update.message.text)
+        voice = texttospeech.VoiceSelectionParams(
+            language_code="en-IN",
+            name="en-IN-Neural2-A"
+        )
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.LINEAR16,
+            effects_profile_id=["small-bluetooth-speaker-class-device"],
+            pitch=0,
+            speaking_rate=1
+        )
+
+        response = client.synthesize_speech(
+            input=input_text,
+            voice=voice,
+            audio_config=audio_config
+        )
+        
+        # Reply with the audio
+        await update.message.reply_voice(voice=response.audio_content)
+        
+        # Update user data for sent message
+        context.user_data['last_10_turns'].append({
+            'timestamp': timestamp,
+            'is_from_user': False,
+            'is_audio': True,
+            'message': None,
+            'audio_blob': response.audio_content
+        })
+        
+        # Update user data for received message
         context.user_data['last_10_turns'].append({
             'timestamp': timestamp,
             'is_from_user': True,
@@ -151,15 +192,36 @@ async def chat(update: Update, context: CallbackContext) -> int:
         await update.message.reply_text(transcript_text)
 
 
-        await update.message.reply_voice(voice_file_id)
+        input_text = texttospeech.SynthesisInput(text=transcript_text)
+        voice = texttospeech.VoiceSelectionParams(
+            language_code="en-IN",
+            name="en-IN-Neural2-A"
+        )
+        audio_config = texttospeech.AudioConfig(
+            audio_encoding=texttospeech.AudioEncoding.LINEAR16,
+            effects_profile_id=["small-bluetooth-speaker-class-device"],
+            pitch=0,
+            speaking_rate=1
+        )
+
+        response = client.synthesize_speech(
+            input=input_text,
+            voice=voice,
+            audio_config=audio_config
+        )
+        
+        # Reply with the audio
+        await update.message.reply_voice(voice=response.audio_content)
+        
+        # Update user data for sent message
         context.user_data['last_10_turns'].append({
             'timestamp': timestamp,
-            'is_from_user': True,
+            'is_from_user': False,
             'is_audio': True,
-            'message': audio_data,
-            'audio_blob': None  # Storing the actual audio data
+            'message': None,
+            'audio_blob': response.audio_content
         })
-
+        
     # Keep only the last 10 turns
 
     if len(context.user_data['last_10_turns']) >= 20:
