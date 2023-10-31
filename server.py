@@ -10,6 +10,7 @@ from datetime import datetime, timezone
 from io import BytesIO
 from google.oauth2.service_account import Credentials
 from google.cloud import texttospeech
+import asyncio
 import json
 import os
 #import boto3
@@ -29,6 +30,29 @@ client = texttospeech.TextToSpeechClient(credentials=credentials)
 
 
 
+async def synthesize_speech_async(input_text):
+    voice = texttospeech.VoiceSelectionParams(
+            language_code="en-IN",
+            name="en-IN-Neural2-A"
+        )
+    audio_config = texttospeech.AudioConfig(
+        audio_encoding=texttospeech.AudioEncoding.LINEAR16,
+        effects_profile_id=["small-bluetooth-speaker-class-device"],
+        pitch=0,
+        speaking_rate=1
+    )
+
+    loop = asyncio.get_running_loop()
+    request = texttospeech.SynthesizeSpeechRequest(
+        input=input_text,
+        voice=voice,
+        audio_config=audio_config
+    )
+    return await loop.run_in_executor(
+        None,
+        client.synthesize_speech,
+        request
+    )
 
 # SQLite Setup
 conn = sqlite3.connect('data.db')
@@ -135,25 +159,10 @@ async def chat(update: Update, context: CallbackContext) -> int:
         await update.message.reply_text(update.message.text)
         # Google Text-to-Speech API integration
         input_text = texttospeech.SynthesisInput(text=update.message.text)
-        voice = texttospeech.VoiceSelectionParams(
-            language_code="en-IN",
-            name="en-IN-Neural2-A"
-        )
-        audio_config = texttospeech.AudioConfig(
-            audio_encoding=texttospeech.AudioEncoding.LINEAR16,
-            effects_profile_id=["small-bluetooth-speaker-class-device"],
-            pitch=0,
-            speaking_rate=1
-        )
-
-        response = client.synthesize_speech(
-            input=input_text,
-            voice=voice,
-            audio_config=audio_config
-        )
         
-        # Reply with the audio
-        await update.message.reply_voice(voice=response.audio_content)
+            
+      # Reply with the audio
+        response = await synthesize_speech_async(input_text)
         
         # Update user data for sent message
         context.user_data['last_10_turns'].append({
@@ -189,26 +198,12 @@ async def chat(update: Update, context: CallbackContext) -> int:
         transcript_text = transcript_response['text']
 
         # Reply with transcribed text
-        await update.message.reply_text(transcript_text)
+        #await update.message.reply_text(transcript_text)
 
 
         input_text = texttospeech.SynthesisInput(text=transcript_text)
-        voice = texttospeech.VoiceSelectionParams(
-            language_code="en-IN",
-            name="en-IN-Neural2-A"
-        )
-        audio_config = texttospeech.AudioConfig(
-            audio_encoding=texttospeech.AudioEncoding.LINEAR16,
-            effects_profile_id=["small-bluetooth-speaker-class-device"],
-            pitch=0,
-            speaking_rate=1
-        )
-
-        response = client.synthesize_speech(
-            input=input_text,
-            voice=voice,
-            audio_config=audio_config
-        )
+        
+        response = await synthesize_speech_async(input_text)
         
         # Reply with the audio
         await update.message.reply_voice(voice=response.audio_content)
