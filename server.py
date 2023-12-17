@@ -80,7 +80,7 @@ log_handler.setFormatter(log_formatter)
 
 logger = logging.getLogger()
 logger.addHandler(log_handler)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.INFO)   
 
 # openai settings
 
