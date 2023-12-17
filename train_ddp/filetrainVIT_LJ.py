@@ -135,7 +135,7 @@ def main():
     dataset_config = BaseDatasetConfig(
         formatter="ljspeech",
         meta_file_train=os.path.join(output_path, "data/metadata.csv"),
-        path=os.path.join(output_path, "data/wavs/")
+        path=os.path.join(output_path, "data/")
     )
 
     # Parse the arguments
