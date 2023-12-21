@@ -227,3 +227,14 @@ def main():
 
 if __name__ == "__main__":
     main()  # Pass None to use sys.argv by default
+
+
+
+
+# TODO: make it start from the facebook checkpoints.
+
+
+# TODO: make it such that it can use wandb logger
+    
+# TODO: implement checkpoint start, we may have to do that in the distribute code.
+    
