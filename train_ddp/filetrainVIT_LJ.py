@@ -233,6 +233,7 @@ if __name__ == "__main__":
 
 # TODO: make it start from the facebook checkpoints.
 
+# TODO: understand the model, and try to make sense of the multispeaker thing.
 
 # TODO: make it such that it can use wandb logger
     
