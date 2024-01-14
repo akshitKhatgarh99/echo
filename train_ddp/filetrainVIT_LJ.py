@@ -237,5 +237,5 @@ if __name__ == "__main__":
 
 # TODO: make it such that it can use wandb logger
     
-# TODO: implement checkpoint start, we may have to do that in the distribute code.
+
     
