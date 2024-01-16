@@ -1,6 +1,6 @@
 import sqlite3
 import aiosqlite
-import openai
+from openai import AsyncOpenAI
 from telegram.request import HTTPXRequest
 from telegram import Update, ReplyKeyboardMarkup, KeyboardButton
 from telegram.ext import Application, CallbackContext, ContextTypes, MessageHandler, filters, ConversationHandler, CommandHandler
@@ -85,8 +85,11 @@ logger.setLevel(logging.INFO)
 # openai settings
 
 
-openai.organization = "org-qCbrL6UwKFX7ZxBi7EkU5ziS"
-openai.api_key = "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"
+client =AsyncOpenAI(api_key="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", organization="org-qCbrL6UwKFX7ZxBi7EkU5ziS")
+
+
+# openai.organization = "org-qCbrL6UwKFX7ZxBi7EkU5ziS"
+# openai.api_key = "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"
 
 
 
@@ -148,8 +151,7 @@ async def handle_contact(update: Update, context: CallbackContext) -> int:
     return CHAT
 
 
-
-    
+   
 
 
 async def chat(update: Update, context: CallbackContext) -> int:
@@ -163,22 +165,11 @@ async def chat(update: Update, context: CallbackContext) -> int:
     if update.message.text:
         user_text = update.message.text
 
-
-
-        # Update user data for sent message
-        context.user_data['last_10_turns'].append({
-            'timestamp': timestamp,
-            'is_from_user': False,
-            'is_audio': True,
-            'message': None,
-            'audio_blob': response_prompt
-        })
-        
         
 
     # Handle audio message
     elif update.message.voice:
-        voice_file_id = update.message.voice.file_id
+
         file_info = await context.bot.get_file(update.message.voice.file_id)
 
         url = file_info.file_path
@@ -188,8 +179,10 @@ async def chat(update: Update, context: CallbackContext) -> int:
         audio_file = BytesIO(audio_data)
         audio_file.name = "audio.mp3"
 
-        transcript_response = await openai.Audio.atranscribe("whisper-1", audio_file ,language = 'hi')
+        transcript_response = await client.audio.transcriptions.create(model ="whisper-1",file= audio_file ,language = 'hi')
         transcript_text = transcript_response['text']
+
+        user_text = transcript_text
 
         # Reply with transcribed text
 
@@ -202,67 +195,77 @@ async def chat(update: Update, context: CallbackContext) -> int:
         'audio_blob': None
     })
 
+
+
+
+    tools = [
+        {
+            "type": "function",
+            "function": {
+            "name": "get_current_weather",
+            "description": "Get the current weather in a given location",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                "location": {
+                    "type": "string",
+                    "description": "The city and state, e.g. San Francisco, CA",
+                },
+                "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+                },
+                "required": ["location"],
+            },
+            }
+        }
+        ]
+
+
     # Call OpenAI with the entire history
-    response = ""
     buffer = []
-    buffer_size = 70
+    buffer_size = 70  # Maximum buffer size, but we'll also look for natural breakpoints
+    #below thing is going to be responsible to make the initial prompt to the chat bot.
     message_history_object = [{'role': 'system', 'content': 'You are a helpful assistant.'}]
-    message_history_object.extend([{'role': 'user', 'content': word} for word in words])
+    # we need to stuff our question and the history of messages here.
+
     
-    async with openai.completions.create(
+    message_history_object.append({'role': 'user', 'content': 'what is the meaning of life ?'})
+
+    stream = await client.chat.completions.create(
         model='gpt-3.5-turbo',
         messages=message_history_object,
         temperature=0.5,
         stream=True
-    ) as response:
-        async for chunk in response:
-            if 'content' in chunk['choices'][0]['message']:
-                content = chunk['choices'][0]['message']['content']
-                buffer.append(content)
-                if len(buffer) >= buffer_size:
-                    message = "".join(buffer)
-                    logger.info(f"Sending reply: {message}")
-                    await update.message.reply_text(message)
-                    buffer = []
-                combine_conver_update.append(content)
-    
-    response += "".join(buffer)
+    ) 
+    async for chunk in stream:
+        if 'content' in chunk['choices'][0]['message']:
+            content = chunk['choices'][0]['message']['content']
+            buffer.append(content)
+
+            # Check if the buffer has reached the size limit or contains a sentence ending
+            if len(buffer) >= buffer_size or any(punct in content for punct in ['.', ',', ';', '?']):
+                message = "".join(buffer)
+                logger.info(f"Sending reply: {message}")
+                #await update.message.reply_text(message)
+                buffer = []  # Reset buffer after sending message
 
 
 
-
-
-
-
-
-
-    #await update.message.reply_text(transcript_text)
-
-
-    input_text = texttospeech.SynthesisInput(text=transcript_text)
-    
-    response = await synthesize_speech_async(input_text)
-    
-    # Reply with the audio
-    await update.message.reply_voice(voice=response.audio_content)
-    
-    # Update user data for sent message
-    context.user_data['last_10_turns'].append({
-        'timestamp': timestamp,
-        'is_from_user': False,
-        'is_audio': True,
-        'message': None,
-        'audio_blob': response.audio_content
-    })
-    
-    # Update user data for received message
-    context.user_data['last_10_turns'].append({
-        'timestamp': timestamp,
-        'is_from_user': True,
-        'is_audio': False,
-        'message': transcript_text,
-        'audio_blob': None
-    })
+                bot_response_text = texttospeech.SynthesisInput(text=message)
+                
+                response = await synthesize_speech_async(bot_response_text)
+                
+                # Reply with the audio
+                await update.message.reply_voice(voice=response.audio_content)
+                
+                # Update user data for sent message
+                context.user_data['last_10_turns'].append({
+                    'timestamp': timestamp,
+                    'is_from_user': False,
+                    'is_audio': True,
+                    'message': bot_response_text,
+                    'audio_blob': response.audio_content
+                })
+                
 
     # Keep only the last 10 turns
 
