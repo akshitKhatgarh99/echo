@@ -147,40 +147,34 @@ async def handle_contact(update: Update, context: CallbackContext) -> int:
     await update.message.reply_text(f'Saved your phone number: {phone_number}')
     return CHAT
 
+
+
+    
+
+
 async def chat(update: Update, context: CallbackContext) -> int:
     user_id = update.message.from_user.id
     timestamp = datetime.now(timezone.utc).isoformat()
-
+    user_text = ""
     if 'last_10_turns' not in context.user_data:
         context.user_data['last_10_turns'] = []
 
     # Handle text message
     if update.message.text:
-        await update.message.reply_text(update.message.text)
-        # Google Text-to-Speech API integration
-        input_text = texttospeech.SynthesisInput(text=update.message.text)
-        
-            
-      # Reply with the audio
-        response = await synthesize_speech_async(input_text)
-        
+        user_text = update.message.text
+
+
+
         # Update user data for sent message
         context.user_data['last_10_turns'].append({
             'timestamp': timestamp,
             'is_from_user': False,
             'is_audio': True,
             'message': None,
-            'audio_blob': response.audio_content
+            'audio_blob': response_prompt
         })
         
-        # Update user data for received message
-        context.user_data['last_10_turns'].append({
-            'timestamp': timestamp,
-            'is_from_user': True,
-            'is_audio': False,
-            'message': update.message.text,
-            'audio_blob': None
-        })
+        
 
     # Handle audio message
     elif update.message.voice:
@@ -198,26 +192,80 @@ async def chat(update: Update, context: CallbackContext) -> int:
         transcript_text = transcript_response['text']
 
         # Reply with transcribed text
-        #await update.message.reply_text(transcript_text)
+
+    # Update user data for received message
+    context.user_data['last_10_turns'].append({
+        'timestamp': timestamp,
+        'is_from_user': True,
+        'is_audio': False,
+        'message': user_text,
+        'audio_blob': None
+    })
+
+    # Call OpenAI with the entire history
+    response = ""
+    buffer = []
+    buffer_size = 70
+    message_history_object = [{'role': 'system', 'content': 'You are a helpful assistant.'}]
+    message_history_object.extend([{'role': 'user', 'content': word} for word in words])
+    
+    async with openai.completions.create(
+        model='gpt-3.5-turbo',
+        messages=message_history_object,
+        temperature=0.5,
+        stream=True
+    ) as response:
+        async for chunk in response:
+            if 'content' in chunk['choices'][0]['message']:
+                content = chunk['choices'][0]['message']['content']
+                buffer.append(content)
+                if len(buffer) >= buffer_size:
+                    message = "".join(buffer)
+                    logger.info(f"Sending reply: {message}")
+                    await update.message.reply_text(message)
+                    buffer = []
+                combine_conver_update.append(content)
+    
+    response += "".join(buffer)
 
 
-        input_text = texttospeech.SynthesisInput(text=transcript_text)
-        
-        response = await synthesize_speech_async(input_text)
-        
-        # Reply with the audio
-        await update.message.reply_voice(voice=response.audio_content)
-        
-        # Update user data for sent message
-        context.user_data['last_10_turns'].append({
-            'timestamp': timestamp,
-            'is_from_user': False,
-            'is_audio': True,
-            'message': None,
-            'audio_blob': response.audio_content
-        })
-        
+
+
+
+
+
+
+
+    #await update.message.reply_text(transcript_text)
+
+
+    input_text = texttospeech.SynthesisInput(text=transcript_text)
+    
+    response = await synthesize_speech_async(input_text)
+    
+    # Reply with the audio
+    await update.message.reply_voice(voice=response.audio_content)
+    
+    # Update user data for sent message
+    context.user_data['last_10_turns'].append({
+        'timestamp': timestamp,
+        'is_from_user': False,
+        'is_audio': True,
+        'message': None,
+        'audio_blob': response.audio_content
+    })
+    
+    # Update user data for received message
+    context.user_data['last_10_turns'].append({
+        'timestamp': timestamp,
+        'is_from_user': True,
+        'is_audio': False,
+        'message': transcript_text,
+        'audio_blob': None
+    })
+
     # Keep only the last 10 turns
+
 
     if len(context.user_data['last_10_turns']) >= 20:
         async with aiosqlite.connect('data.db') as db:
