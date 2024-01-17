@@ -16,6 +16,7 @@ import os
 #import boto3
 import threading
 import time
+import requests
 # SQLite Setup
 conn = sqlite3.connect('users.db')
 cursor = conn.cursor()
@@ -26,7 +27,7 @@ conn.close()
 #google TTS
 
 credentials = Credentials.from_service_account_file("credentials.json")
-client = texttospeech.TextToSpeechClient(credentials=credentials)
+google_client = texttospeech.TextToSpeechClient(credentials=credentials)
 
 
 
@@ -50,7 +51,7 @@ async def synthesize_speech_async(input_text):
     )
     return await loop.run_in_executor(
         None,
-        client.synthesize_speech,
+        google_client.synthesize_speech,
         request
     )
 
@@ -150,6 +151,27 @@ async def handle_contact(update: Update, context: CallbackContext) -> int:
     await update.message.reply_text(f'Saved your phone number: {phone_number}')
     return CHAT
 
+def get_current_weather(location: str, unit: str = "celsius"):
+    # Your code to get the current weather in the given location
+
+    # # Make a request to the weather API
+    # api_key = "YOUR_API_KEY"
+    # url = f"https://api.weatherapi.com/v1/current.json?key={api_key}&q={location}&unit={unit}"
+    # response = requests.get(url)
+
+    # # Check if the request was successful
+    # if response.status_code == 200:
+    #     data = response.json()
+    #     # Extract the relevant weather information
+    #     temperature = data["current"]["temp_" + unit]
+    #     condition = data["current"]["condition"]["text"]
+    #     # Print the weather information
+        print(f"The current weather in {location} is cold {unit} with another cold .")
+    # else:
+    #     print("Failed to retrieve the weather information.")
+
+    # Example usage
+
 
    
 
@@ -180,7 +202,8 @@ async def chat(update: Update, context: CallbackContext) -> int:
         audio_file.name = "audio.mp3"
 
         transcript_response = await client.audio.transcriptions.create(model ="whisper-1",file= audio_file ,language = 'hi')
-        transcript_text = transcript_response['text']
+        transcript_text = transcript_response.text
+        print(transcript_text)
 
         user_text = transcript_text
 
@@ -222,33 +245,35 @@ async def chat(update: Update, context: CallbackContext) -> int:
 
     # Call OpenAI with the entire history
     buffer = []
+    buffer_size_min = 30  # Minimum buffer size, we'll wait for a sentence ending
     buffer_size = 70  # Maximum buffer size, but we'll also look for natural breakpoints
     #below thing is going to be responsible to make the initial prompt to the chat bot.
     message_history_object = [{'role': 'system', 'content': 'You are a helpful assistant.'}]
     # we need to stuff our question and the history of messages here.
 
-    
+
     message_history_object.append({'role': 'user', 'content': 'what is the meaning of life ?'})
 
     stream = await client.chat.completions.create(
         model='gpt-3.5-turbo',
         messages=message_history_object,
+        tools=tools,
+        tool_choice="auto",
         temperature=0.5,
         stream=True
     ) 
     async for chunk in stream:
-        if 'content' in chunk['choices'][0]['message']:
-            content = chunk['choices'][0]['message']['content']
+        if  chunk.choices[0].delta.content != None:
+
+            content = chunk.choices[0].delta.content
             buffer.append(content)
 
             # Check if the buffer has reached the size limit or contains a sentence ending
-            if len(buffer) >= buffer_size or any(punct in content for punct in ['.', ',', ';', '?']):
+            if len(buffer)>= buffer_size_min and (len(buffer) >= buffer_size or any(punct in content for punct in ['.', ';', '?'])):
                 message = "".join(buffer)
                 logger.info(f"Sending reply: {message}")
                 #await update.message.reply_text(message)
                 buffer = []  # Reset buffer after sending message
-
-
 
                 bot_response_text = texttospeech.SynthesisInput(text=message)
                 
