@@ -151,27 +151,118 @@ async def handle_contact(update: Update, context: CallbackContext) -> int:
     await update.message.reply_text(f'Saved your phone number: {phone_number}')
     return CHAT
 
-def get_current_weather(location: str, unit: str = "celsius"):
+
+
+
+
+def get_tool(location: str, unit: str = "celsius"):
     # Your code to get the current weather in the given location
 
-    # # Make a request to the weather API
-    # api_key = "YOUR_API_KEY"
-    # url = f"https://api.weatherapi.com/v1/current.json?key={api_key}&q={location}&unit={unit}"
-    # response = requests.get(url)
-
-    # # Check if the request was successful
-    # if response.status_code == 200:
-    #     data = response.json()
-    #     # Extract the relevant weather information
-    #     temperature = data["current"]["temp_" + unit]
-    #     condition = data["current"]["condition"]["text"]
     #     # Print the weather information
         print(f"The current weather in {location} is cold {unit} with another cold .")
-    # else:
-    #     print("Failed to retrieve the weather information.")
+  
 
-    # Example usage
 
+tools = [
+    {
+        "type": "function",
+        "function": {
+        "name": "get_current_weather",
+        "description": "Get the current weather in a given location",
+        "parameters": {
+            "type": "object",
+            "properties": {
+            "location": {
+                "type": "string",
+                "description": "The city and state, e.g. San Francisco, CA",
+            },
+            "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+            },
+            "required": ["location"],
+        },
+        }
+    }
+    ]
+
+
+
+
+async def handle_stream(client, message_history_object, tools,update: Update, context: CallbackContext):
+
+    timestamp = datetime.now(timezone.utc).isoformat()
+    buffer = []
+    # we need to fix this buffer size thing. make sure if the final buffer is less than 30 you also give output.
+    buffer_size_min = 30  # Minimum buffer size, we'll wait for a sentence ending
+    buffer_size = 70  # Maximum buffer size, but we'll also look for natural breakpoints
+    #below thing is going to be responsible to make the initial prompt to the chat bot.
+    stream = await client.chat.completions.create(
+        model='gpt-3.5-turbo',
+        messages=message_history_object,
+        tools=tools,
+        tool_choice="auto",
+        temperature=0.5,
+        stream=True
+    ) 
+    async for chunk in stream:
+        if  chunk.choices[0].delta.content != None:
+
+
+            content = chunk.choices[0].delta.content
+            buffer.append(content)
+
+
+            # Check if the buffer has reached the size limit or contains a sentence ending
+            if len(buffer)>= buffer_size_min and (len(buffer) >= buffer_size or any(punct in content for punct in ['.', ',',';', '?'])):
+                message = "".join(buffer)
+                logger.info(f"Sending reply: {message}")
+                #await update.message.reply_text(message)
+                buffer = []  # Reset buffer after sending message
+
+                bot_response_text = texttospeech.SynthesisInput(text=message)
+                
+                response = await synthesize_speech_async(bot_response_text)
+
+                
+                # Reply with the audio
+                await update.message.reply_voice(voice=response.audio_content)
+                
+                # Update user data for sent message
+                context.user_data['last_10_turns'].append({
+                    'timestamp': timestamp,
+                    'is_from_user': False,
+                    'is_audio': True,
+                    'message': bot_response_text,
+                    'audio_blob': response.audio_content
+                })
+
+        if chunk.choices[0].finish_reason == "tool_calls":
+            get_tool("San Francisco", "celsius")
+            return True
+        
+        if chunk.choices[0].finish_reason == "stop":
+            message = "".join(buffer)
+            logger.info(f"Sending reply: {message}")
+            #await update.message.reply_text(message)
+            buffer = []  # Reset buffer after sending message
+
+            bot_response_text = texttospeech.SynthesisInput(text=message)
+            
+            response = await synthesize_speech_async(bot_response_text)
+
+            
+            # Reply with the audio
+            await update.message.reply_voice(voice=response.audio_content)
+            
+            # Update user data for sent message
+            context.user_data['last_10_turns'].append({
+                'timestamp': timestamp,
+                'is_from_user': False,
+                'is_audio': True,
+                'message': bot_response_text,
+                'audio_blob': response.audio_content
+            })
+
+            return False
 
    
 
@@ -221,75 +312,30 @@ async def chat(update: Update, context: CallbackContext) -> int:
 
 
 
-    tools = [
-        {
-            "type": "function",
-            "function": {
-            "name": "get_current_weather",
-            "description": "Get the current weather in a given location",
-            "parameters": {
-                "type": "object",
-                "properties": {
-                "location": {
-                    "type": "string",
-                    "description": "The city and state, e.g. San Francisco, CA",
-                },
-                "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
-                },
-                "required": ["location"],
-            },
-            }
-        }
-        ]
-
-
     # Call OpenAI with the entire history
-    buffer = []
-    buffer_size_min = 30  # Minimum buffer size, we'll wait for a sentence ending
-    buffer_size = 70  # Maximum buffer size, but we'll also look for natural breakpoints
-    #below thing is going to be responsible to make the initial prompt to the chat bot.
+    
     message_history_object = [{'role': 'system', 'content': 'You are a helpful assistant.'}]
     # we need to stuff our question and the history of messages here.
 
+    for i in context.user_data['last_10_turns']:
+        if i['is_from_user']:
+            message_history_object.append({'role': 'user', 'content': str(i['message'])})
+        else:
+            message_history_object.append({'role': 'assitant', 'content': str(i['message'])})
 
-    message_history_object.append({'role': 'user', 'content': 'what is the meaning of life ?'})
+    message_history_object.append({'role': 'user', 'content': str(user_text)})
 
-    stream = await client.chat.completions.create(
-        model='gpt-3.5-turbo',
-        messages=message_history_object,
-        tools=tools,
-        tool_choice="auto",
-        temperature=0.5,
-        stream=True
-    ) 
-    async for chunk in stream:
-        if  chunk.choices[0].delta.content != None:
+    tool_called=await handle_stream(client, message_history_object, tools,update, context)
 
-            content = chunk.choices[0].delta.content
-            buffer.append(content)
+    if tool_called:
+        # modify this above object to include the tool call.
+        tool_prompt = get_tool("San Francisco ", "celsius")
+        message_history_object.append({'role': 'user', 'content': 'what is the weather like today? in San Francisco'})
 
-            # Check if the buffer has reached the size limit or contains a sentence ending
-            if len(buffer)>= buffer_size_min and (len(buffer) >= buffer_size or any(punct in content for punct in ['.', ';', '?'])):
-                message = "".join(buffer)
-                logger.info(f"Sending reply: {message}")
-                #await update.message.reply_text(message)
-                buffer = []  # Reset buffer after sending message
 
-                bot_response_text = texttospeech.SynthesisInput(text=message)
+        await handle_stream(client, message_history_object, tools,update, context)
+            
                 
-                response = await synthesize_speech_async(bot_response_text)
-                
-                # Reply with the audio
-                await update.message.reply_voice(voice=response.audio_content)
-                
-                # Update user data for sent message
-                context.user_data['last_10_turns'].append({
-                    'timestamp': timestamp,
-                    'is_from_user': False,
-                    'is_audio': True,
-                    'message': bot_response_text,
-                    'audio_blob': response.audio_content
-                })
                 
 
     # Keep only the last 10 turns
