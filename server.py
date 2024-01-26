@@ -24,6 +24,74 @@ cursor.execute("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, phone_num
 conn.commit()
 conn.close()
 
+
+# SQLite inmemory database for chat questions that have been asked
+import random
+
+# Create a connection to an in-memory database
+conn_mem = sqlite3.connect(':memory:')
+cursor = conn_mem.cursor()
+
+# Create table for all questions
+cursor.execute('''
+CREATE TABLE all_questions (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    question_string TEXT
+);
+''')
+
+# Create table to track asked questions
+cursor.execute('''
+CREATE TABLE asked_questions (
+    user_id TEXT,
+    question_id INTEGER,
+    FOREIGN KEY(question_id) REFERENCES all_questions(id)
+);
+''')
+conn_mem.commit()
+
+
+
+def insert_question(conn, question_string):
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO all_questions (question_string) VALUES (?)", (question_string,))
+    conn.commit()
+
+
+
+# define insert questions here so that we can take all the questions from a json and put them in the database.
+
+
+
+
+
+
+
+
+
+
+def select_unasked_question(conn, user_id):
+    cursor = conn.cursor()
+    cursor.execute('''
+        SELECT id, question_string FROM all_questions
+        WHERE id NOT IN (
+            SELECT question_id FROM asked_questions WHERE user_id = ?
+        )
+    ''', (user_id,))
+    unasked_questions = cursor.fetchall()
+
+    if not unasked_questions:
+        return None  # No more unasked questions available
+
+    return random.choice(unasked_questions)
+
+
+def mark_question_as_asked(conn, user_id, question_id):
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO asked_questions (user_id, question_id) VALUES (?, ?)", (user_id, question_id))
+    conn.commit()
+
+
 #google TTS
 
 credentials = Credentials.from_service_account_file("credentials.json")
@@ -155,11 +223,18 @@ async def handle_contact(update: Update, context: CallbackContext) -> int:
 
 
 
-def get_tool(location: str, unit: str = "celsius"):
-    # Your code to get the current weather in the given location
+def get_question(user_id):
+    # Get a question that has not been asked yet
+    question = select_unasked_question(conn_mem, user_id)
+    if question is None:
+        # No more questions available, return None
+        return None
 
-    #     # Print the weather information
-        print(f"The current weather in {location} is cold {unit} with another cold .")
+    # Mark the question as asked
+    mark_question_as_asked(conn_mem, user_id, question[0])
+
+    return question[1]  # Return the question string
+
   
 
 
@@ -167,7 +242,7 @@ tools = [
     {
         "type": "function",
         "function": {
-        "name": "get_current_weather",
+        "name": "get_question",
         "description": "Get the current weather in a given location",
         "parameters": {
             "type": "object",
@@ -235,8 +310,33 @@ async def handle_stream(client, message_history_object, tools,update: Update, co
                     'audio_blob': response.audio_content
                 })
 
+        
+        # the below two if satements have same body just different return values.
+                
         if chunk.choices[0].finish_reason == "tool_calls":
-            get_tool("San Francisco", "celsius")
+            message = "".join(buffer)
+            logger.info(f"Sending reply: {message}")
+            #await update.message.reply_text(message)
+            buffer = []  # Reset buffer after sending message
+
+            bot_response_text = texttospeech.SynthesisInput(text=message)
+            
+            response = await synthesize_speech_async(bot_response_text)
+
+            
+            # Reply with the audio
+            await update.message.reply_voice(voice=response.audio_content)
+            
+            # Update user data for sent message
+            context.user_data['last_10_turns'].append({
+                'timestamp': timestamp,
+                'is_from_user': False,
+                'is_audio': True,
+                'message': bot_response_text,
+                'audio_blob': response.audio_content
+            })
+
+
             return True
         
         if chunk.choices[0].finish_reason == "stop":
@@ -329,8 +429,9 @@ async def chat(update: Update, context: CallbackContext) -> int:
 
     if tool_called:
         # modify this above object to include the tool call.
-        tool_prompt = get_tool("San Francisco ", "celsius")
-        message_history_object.append({'role': 'user', 'content': 'what is the weather like today? in San Francisco'})
+        question = get_question(update.message.from_user.id)
+
+        message_history_object.append({'role': 'user', 'content': str(question)})
 
 
         await handle_stream(client, message_history_object, tools,update, context)
