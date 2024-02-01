@@ -24,12 +24,49 @@ cursor.execute("CREATE TABLE IF NOT EXISTS users (id TEXT PRIMARY KEY, phone_num
 conn.commit()
 conn.close()
 
-
 # SQLite inmemory database for chat questions that have been asked
 import random
 
 # Create a connection to an in-memory database
-conn_mem = sqlite3.connect(':memory:')
+# On application start
+def backup_database(in_mem_conn, backup_file):
+    # Connect to a database file
+    file_conn = sqlite3.connect(backup_file)
+    # Use the backup API
+    with file_conn:
+        in_mem_conn.backup(file_conn)
+    file_conn.close()
+
+
+def restore_database(backup_file):
+    file_conn = sqlite3.connect(backup_file)
+    mem_conn = sqlite3.connect(':memory:')
+    with mem_conn:
+        file_conn.backup(mem_conn)
+    file_conn.close()
+    return mem_conn
+
+
+
+def periodic_backup(conn, interval, backup_file):
+    while True:
+        time.sleep(interval)  # Wait for the specified interval (in seconds)
+        backup_database(conn, backup_file)  # Call your backup function
+
+
+backup_file = 'inmembackup.db'
+try:
+    conn_mem = restore_database(backup_file)
+except FileNotFoundError:
+    # No backup found, start with a fresh database
+    conn_mem = sqlite3.connect(':memory:')
+    # Initialize your database tables here
+
+# Periodically during application runtime
+backup_database(conn_mem, backup_file)
+
+# Use conn_mem as usual for your database operations
+
 cursor = conn_mem.cursor()
 
 # Create table for all questions
@@ -48,6 +85,20 @@ CREATE TABLE asked_questions (
     FOREIGN KEY(question_id) REFERENCES all_questions(id)
 );
 ''')
+
+
+cursor.execute('''
+CREATE TABLE IF NOT EXISTS chat_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id TEXT,
+    timestamp TEXT,
+    is_from_user BOOLEAN,
+    is_audio BOOLEAN,
+    message TEXT,
+    audio_blob BLOB
+);
+''')
+
 conn_mem.commit()
 
 
@@ -123,24 +174,7 @@ async def synthesize_speech_async(input_text):
         request
     )
 
-# SQLite Setup
-conn = sqlite3.connect('data.db')
-cursor = conn.cursor()
 
-cursor.execute('''
-CREATE TABLE IF NOT EXISTS chat_history (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id TEXT,
-    timestamp TEXT,
-    is_from_user BOOLEAN,
-    is_audio BOOLEAN,
-    message TEXT,
-    audio_blob BLOB
-);
-''')
-
-conn.commit()
-conn.close()
 
 # Logging Setup
 log_handler = RotatingFileHandler('your_log_file.log', maxBytes=1e6, backupCount=3)
@@ -430,8 +464,14 @@ async def chat(update: Update, context: CallbackContext) -> int:
     if tool_called:
         # modify this above object to include the tool call.
         question = get_question(update.message.from_user.id)
+        if question is not None:
+            print("question should be asked, error line 434")
+        
 
-        message_history_object.append({'role': 'user', 'content': str(question)})
+        # make sure that we have a smooth flow from one question to another, put that in the main prompt.
+    
+        new_que_prompt = ""    
+        message_history_object.append({'role': 'assitant', 'content': new_que_prompt+ str(question)})
 
 
         await handle_stream(client, message_history_object, tools,update, context)
@@ -443,15 +483,15 @@ async def chat(update: Update, context: CallbackContext) -> int:
 
 
     if len(context.user_data['last_10_turns']) >= 20:
-        async with aiosqlite.connect('data.db') as db:
-            cursor = await db.cursor()
-            # Write the first 10 turns to the database.
-            for turn in context.user_data['last_10_turns'][:10]:
-                await cursor.execute(
-                    'INSERT INTO chat_history (user_id, timestamp, is_from_user, is_audio, message, audio_blob) VALUES (?, ?, ?, ?, ?, ?)',
-                    (user_id, turn['timestamp'], turn['is_from_user'], turn['is_audio'], turn['message'], turn['audio_blob'])
-                )
-            await db.commit()
+
+        cursor = conn_mem.cursor()
+        # Write the first 10 turns to the database.
+        for turn in context.user_data['last_10_turns'][:10]:
+            cursor.execute(
+                'INSERT INTO chat_history (user_id, timestamp, is_from_user, is_audio, message, audio_blob) VALUES (?, ?, ?, ?, ?, ?)',
+                (user_id, turn['timestamp'], turn['is_from_user'], turn['is_audio'], turn['message'], turn['audio_blob'])
+            )
+        conn_mem.commit()
         # Keep the last 10 turns in the buffer.
         context.user_data['last_10_turns'] = context.user_data['last_10_turns'][10:]
 
@@ -480,6 +520,13 @@ def main():
 
     application.add_handler(conv_handler)
     application.run_polling(allowed_updates=Update.ALL_TYPES)
+    backup_interval = 1000  # Backup every hour (3600 seconds)
+    backup_file = 'inmembackup.db'
+
+
+    # Start the backup thread
+    backup_thread = threading.Thread(target=periodic_backup, args=(conn_mem, backup_interval, backup_file), daemon=True)
+    backup_thread.start()
     # s3_thread = threading.Thread(target=upload_to_s3, daemon=True)
     # s3_thread.start()
 
