@@ -1,0 +1,1296 @@
+
+{
+  "Topic": "Travel Experiences",
+  "Prompt Language": "Hinglish",
+  "Starter": "तुम कभी Munnar, Kerala गए हो?",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Nature and Scenery",
+  "Prompt Language": "Hinglish",
+  "Starter": "क्या तुमने कभी tea gardens मे अपना time spend किया है?",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Flora and Fauna",
+  "Prompt Language": "Hinglish",
+  "Starter": "नीलकुरुंजी flower और Nilgiri Tahr के बारे में सुना है क्या?",
+  "Key Grammar Point": "Present Perfect"
+}
+
+
+{
+  "Topic": "Travel Experiences",
+  "Prompt Language": "Hinglish",
+  "Starter": "तुमने कभी Munnar, Kerala जैसी scenic place visit की है?",
+  "Key Grammar Point": "Past Simple"
+}
+
+
+{
+  "Topic": "Water Scarcity in India",
+  "Prompt Language": "Hinglish",
+  "Starter": "विज्ञानियों का मानना है कि 2050 तक प्रति व्यक्ति water की availability में 30% की कमी होगी।",
+  "Key Grammar Point": "Present Continuous Tense"
+}
+
+
+{
+  "Topic": "Water Availability in India",
+  "Prompt Language": "Hinglish",
+  "Starter": "India में clean और adequate water की availability कोई नयी problem नहीं है।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+
+{
+  "Topic": "Water Availability in India",
+  "Prompt Language": "Hinglish",
+  "Starter": "India में clean और adequate water की accessibility अभी भी most people के लिए नहीं है।",
+  "Key Grammar Point": "Present Perfect Continuous"
+}
+
+{
+  "Topic": "Water Access in India",
+  "Prompt Language": "Hinglish",
+  "Starter": "भारत में clean और adequate water का access बहुत से लोगों के लिए अभी भी उपलब्ध नहीं है।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+
+{
+  "Topic": "Water Wastage in India",
+  "Prompt Language": "Hinglish",
+  "Starter": "India में rain water का proper द्वारा use नहीं होता है और ज्यादा तर वाष्पित हो जाता है।",
+  "Key Grammar Point": "Mixed Tense Practice"
+}
+
+
+{
+  "Topic": "Travel & Destinations",
+  "Prompt Language": "Hinglish",
+  "Starter": "Munnar में tea gardens को देखकर मुझे बहुत ख़ुशी हुई।",
+  "Key Grammar Point": "Present Continuous Tense"
+}
+
+
+{
+  "Topic": "Nature and Wildlife",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं Neelakurunji flower जो 12 साल में एक बार खिलता है, देखने जा रहा हूँ।",
+  "Key Grammar Point": "Present Continuous Tense"
+}
+
+
+{
+  "Topic": "Travel to Munnar",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैंने Munnar में बहुत सारे tea gardens देखे हैं।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Tourism Experience",
+  "Prompt Language": "Hinglish",
+  "Starter": "वहाँ के scenic resorts से valley को देखते हुए, मैं पिछले दो घंटों से relax कर रहा हूँ।",
+  "Key Grammar Point": "Present Perfect Continuous"
+}
+
+
+{
+  "Topic": "Nature Observations",
+  "Prompt Language": "Hinglish",
+  "Starter": "उन्होंने the Nilgiri Tahr, a rare breed of mountain goat, Munnar में spotted किया था।",
+  "Key Grammar Point": "Past Simple"
+}
+
+
+{
+  "Topic": "Nature's Beauty",
+  "Prompt Language": "Hinglish",
+  "Starter": "हमने मुन्नार के पहाड़ों में  fog को slowly cover करते हुए देखा।",
+  "Key Grammar Point": "Past Perfect Continuous"
+}
+
+
+
+{
+  "Topic": "Traveling Experience",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं आने वाले साल Goa जाना plan कर रहा हूँ।",
+  "Key Grammar Point": "Future Simple"
+}
+
+
+{
+  "Topic": "Natural Beauty",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले महीने  मैं Kerela जा रहा हूं। मैंने decide कर लिया है कि मैंने Anamudi, South India के tallest peak को climb करना hai",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+{
+  "Topic": "School Activities",
+  "Prompt Language": "Hinglish",
+  "Starter": "हम continuously extra classes ले रहे हैं high school में।",
+  "Key Grammar Point": "Present Perfect Continuous"
+}
+
+
+{
+  "Topic": "Extracurricular Activities",
+  "Prompt Language": "Hinglish",
+  "Starter": "हम विभिन्न art forms या activities सीख रहे हैं शाम में।",
+  "Key Grammar Point": "Present Perfect Continuous"
+} 
+
+
+{
+  "Topic": "Student Life",
+  "Prompt Language": "Hinglish",
+  "Starter": "एक समय ऐसा भी था जब हमें breaks में भी अपना work complete करना पड़ता था।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+
+{
+  "Topic": "School Routine",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं शाम को art class attend करना बंद कर दूंगा, अगर extra classes बढ़ती रहीं",
+  "Key Grammar Point": "Future Simple"
+}
+
+
+{
+  "Topic": "Stress from Education",
+  "Prompt Language": "Hinglish",
+  "Starter": "Homework और project work complete करना often बहुत मुश्किल हो जाता हैं, और यह हमारी health को affect करता हैं। In the future, many students शायद stop कर देंगे attending the extra classes।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+
+{
+  "Topic": "Streaming Platforms",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं future में web series ज्यादा binge-watch करूंगा और धीरे-धीरे अपना traditional TV viewing habits change करूंगा।",
+  "Key Grammar Point": "Future Perfect Continuous"
+}
+
+
+{
+  "Topic": "Cricket and IPL",
+  "Prompt Language": "Hinglish",
+  "Starter": "IPL की success के बाद, traditional cricket formats खतरे में हो सकती हैं।",
+  "Key Grammar Point": "Future Perfect Continuous"
+}
+
+
+{
+  "Topic": "Digital India's Features",
+  "Prompt Language": "Hinglish",
+  "Starter": "Government ने Digital India के तहत एक unique private key प्रदान करने की योजना बनाई है, जिससे लोग अपने दस्तावेजों को digital vaults (कोठियों) में store कर सकेंगे।",
+  "Key Grammar Point": "Future Perfect Continuous"
+}
+
+
+{
+  "Topic": "Space Exploration",
+  "Prompt Language": "Hinglish",
+  "Starter": "ISRO अपने अगले mission को करने के लिए perfectly तैयार हो चुका है।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+
+
+{
+  "Topic": "Digital India Initiative",
+  "Prompt Language": "Hinglish",
+  "Starter": "खबरों में सुना है कि government , information technology, computers, और internet सुविधाओ का use करके नागरिकों को दी जाने वाली सेवाओं को आधुनिक बनाने का योजना बना रहे हैं।",
+  "Key Grammar Point": "Future Perfect Continuous"
+}
+
+
+
+
+{
+  "Topic": "Digital Life",
+  "Prompt Language": "Hinglish",
+  "Starter": "एक छोटी device like phone हमारे life का इतना important part बन जाती हैं",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+{
+  "Topic": "Healthy Routine",
+  "Prompt Language": "Hinglish",
+  "Starter": "जब तक मैं जिम join नहीं करूंगा, मुझे peaceful mind nahi मिलेगा।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+
+
+{
+  "Topic": "Fitness Goals",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैंने soch लिया है कि मैं अगले साल तक अपने fitness goals achieve करूंगा।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+{
+  "Topic": "Mobile Gaming",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैंने अगले हफ्ते तक PUBG में अपने leaderboard में top position पा ली होगी।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+{
+  "Topic": "Digital Entertainment",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं अपने upcoming shows को continuously stream करने का अभी से planning कर रहा हूँ।",
+  "Key Grammar Point": "Future Perfect Continuous"
+}
+
+
+
+{
+  "Topic": "Changes in Cricket",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं traditional cricket formats को IPL की चमक-दमक के shadow में disappearing होते हुए देख रहा हूँ ",
+  "Key Grammar Point": "Future Perfect Continuous"
+}
+
+
+
+{
+  "Topic": "The Wonders of Universe",
+  "Prompt Language": "Hinglish",
+  "Starter": "ISRO ने अगले साल तक एक नया मिशन launch करने की योजना बना रखी है।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+{
+  "Topic": "Fitness & Well-being",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले साल तक मैं gym में अपनी intensity बढ़ाकर पूरी athletic body achieve कर लूंगी।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+{
+  "Topic": "Travel Aspirations",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैंने Himalayas की natural beauty को देखने का plan बना रखा है।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+
+
+{
+  "Topic": "Mobile Video Games",
+  "Prompt Language": "Hinglish",
+  "Starter": "मुझे उम्मीद है कि मैंने game में 100 victories जीत ली होंगी अगले महीने तक।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+
+{
+  "Topic": "Binge-watching Culture",
+  "Prompt Language": "Hinglish",
+  "Starter": "जब तक तुम उस web series को start करोगे, मैं उसकी entire season finish कर चुका होगा।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+{
+  "Topic": "Sports and Entertainment",
+  "Prompt Language": "Hinglish",
+  "Starter": "IPL auction ने game को एक glamorous affair बना दिया है, sports और entertainment को mix करके।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+{
+  "Topic": "Space Exploration",
+  "Prompt Language": "Hinglish",
+  "Starter": "ISRO के upcoming missions पर आपका विचार क्या है?",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+
+{
+  "Topic": "Travel Goals",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं next year, Himalayas घूमने जा रहा हूँ।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+
+{
+  "Topic": "Space Exploration",
+  "Prompt Language": "Hinglish",
+  "Starter": "ISRO अपने अगले mission को करने के लिए perfectly तैयार हो चुका है।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+{
+  "Topic": "Healthy Routine",
+  "Prompt Language": "Hinglish",
+  "Starter": "जब तक मैं जिम join नहीं करूंगा, मुझे peaceful mind nahi मिलेगा।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+
+{
+  "Topic": "Fitness Goals",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैंने soch लिया है कि मैं अगले साल तक अपने fitness goals achieve करूंगा।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+
+{
+  "Topic": "Astronomy and Space Exploration",
+  "Prompt Language": "Hinglish",
+  "Starter": "हम kal raat movie देखने की planning कर रहे हैं।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+{
+  "Topic": "Exercise Routine",
+  "Prompt Language": "Hinglish",
+  "Starter": "आज से शाम में मैं योगा करना शुरू करूंगी।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+{
+  "Topic": "Fitness Journey",
+  "Prompt Language": "Hinglish",
+  "Starter": "कल सुबह में मैं जिम जाऊंगा और weight lifting करूंगा।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+
+{
+  "Topic": "Digital Payments",
+  "Prompt Language": "Hinglish",
+  "Starter": "India में मोबाइल wallets और UPI का use बढ़ रहा है।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+{
+  "Topic": "Online Education",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले महीने से मैं online courses लेना शुरू कर दूंगा।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+
+{
+  "Topic": "Sustainable Living",
+  "Prompt Language": "Hinglish",
+  "Starter": "इस साल से हम solar energy का use बढ़ाने वाले हैं।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+
+{
+  "Topic": "Travel Plans",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगली गर्मियों में हम Europe घूमने जा रहे होंगे।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+{
+  "Topic": "Technology Adoption",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले कुछ सालों में लोगों का AI technology के प्रति रुझान बढ़ता जा रहा होगा।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+
+{
+  "Topic": "Healthy Eating",
+  "Prompt Language": "Hinglish",
+  "Starter": "नए साल से मैं हर दिन green vegetables खाना शुरू करूंगा।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+{
+  "Topic": "Adopting Healthy Lifestyle",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले हफ्ते से मैं रोज़ सुबह जल्दी उठने लगूंगा।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+
+{
+  "Topic": "Work From Home",
+  "Prompt Language": "Hinglish",
+  "Starter": "आने वाले महीनों में, हमारी कंपनी remote work को और बढ़ावा देगी।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+
+{
+  "Topic": "Adoption of Electric Vehicles",
+  "Prompt Language": "Hinglish",
+  "Starter": "दस साल बाद, india में ज्यादातर लोग electric cars चला रहे होंगे।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+
+
+{
+  "Topic": "Sustainable Living",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले साल से हम सोलर एनर्जी का इस्तेमाल करना शुरू कर देंगे।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+
+
+{
+  "Topic": "Digital Detox",
+  "Prompt Language": "Hinglish",
+  "Starter": "इस वीकेंड से मैं हर sunday को social media से break लेने लगूंगा।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+
+{
+  "Topic": "Exercise Routine",
+  "Prompt Language": "Hinglish",
+  "Starter": "नए साल से मैं जिम में regular workout करने लगूंगा।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+
+{
+  "Topic": "Reading Habit",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले हफ्ते से मैं रोज़ रात को book पढ़ने लगूंगा।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+
+{
+  "Topic": "Meditation Practice",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले सोमवार से मैं रोज़ सुबह meditation करने लगूंगा।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+{
+  "Topic": "Sustainable Travel",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगली ट्रिप से, हम local और eco-friendly hotels में रुकने की कोशिश करेंगे।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+{
+  "Topic": "Music Learning",
+  "Prompt Language": "Hinglish",
+  "Starter": "इस वीकेंड से मैं guitar practice रोज़ करने वाला हूँ।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+{
+  "Topic": "Cooking Skills",
+  "Prompt Language": "Hinglish",
+  "Starter": "इस संडे से, मैं नई recipes try करने का routine बनाने वाला हूँ।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+{
+  "Topic": "Tech Skill Development",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले सेमेस्टर से, मैं coding languages सीखने में ज्यादा समय देने वाला हूँ।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+{
+  "Topic": "Home Gardening",
+  "Prompt Language": "Hinglish",
+  "Starter": "इस वीकेंड से, हम अपनी balcony में herbs और vegetables उगाने लगेंगे।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+{
+  "Topic": "Saving for Vacation",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले महीने से, हम हर महीने थोड़े पैसे vacation fund में डालने लगेंगे।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+{
+  "Topic": "Learning to Cook",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले हफ्ते से, मैं YouTube tutorials देखकर नई dishes बनाना सीखने लगूंगा।",
+  "Key Grammar Point": "Future Continuous"
+}
+
+
+
+{
+  "Topic": "Home Renovation",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले महीने तक, हम अपने घर का renovation पूरा कर चुके होंगे।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+{
+  "Topic": "Saving Goals",
+  "Prompt Language": "Hinglish",
+  "Starter": "इस साल के अंत तक, मैं अपनी car के लिए पैसे save कर चुका होऊंगा।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+{
+  "Topic": "Exam Preparation",
+  "Prompt Language": "Hinglish",
+  "Starter": "Board exams शुरू होने से पहले, मैं सारे syllabus को cover कर चुका होऊंगा।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+{
+  "Topic": "College Applications",
+  "Prompt Language": "Hinglish",
+  "Starter": "इस वर्ष के अंत तक, मैं सभी college applications submit कर चुका होऊंगा।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+{
+  "Topic": "Learning a Musical Instrument",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले छह महीनों में, मैं guitar बजाना सीख चुका होऊंगा।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+{
+  "Topic": "Environmental Project",
+  "Prompt Language": "Hinglish",
+  "Starter": "इस semester के अंत तक, हम अपने school में recycling project शुरू कर चुके होंगे।",
+  "Key Grammar Point": "Future Perfect"
+}
+
+
+
+{
+  "Topic": "Board Exam Preparation",
+  "Prompt Language": "Hinglish",
+  "Starter": "बोर्ड exams के शुरू होने तक, मैं रोज़ चार घंटे study करते हुए, syllabus को cover कर रहा होऊंगा।",
+  "Key Grammar Point": "Future Perfect Continuous"
+}
+
+
+{
+  "Topic": "Health Improvement",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले छह महीने में, मैं रोजाना healthy diet follow करके अपनी health में सुधार लाऊंगा।",
+  "Key Grammar Point": "Future Perfect Continuous"
+}
+
+
+{
+  "Topic": "Fitness Goal",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले साल तक, मैं रोजाना एक्सरसाइज करके अपनी fitness improve कर लूंगा।",
+  "Key Grammar Point": "Future Perfect Continuous"
+}
+
+
+
+
+{
+  "Topic": "Sustainable Habits",
+  "Prompt Language": "Hinglish",
+  "Starter": "आने वाले महीनों में, हम plastic का use कम करके environment को protect करने में योगदान देंगे।",
+  "Key Grammar Point": "Future Perfect Continuous"
+}
+
+
+
+
+{
+  "Topic": "Music Practice",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले तीन महीने तक, मैं रोज guitar practice करके अपने music skills को enhance करूँगा।",
+  "Key Grammar Point": "Future Perfect Continuous"
+}
+
+
+
+{
+  "Topic": "Travel Vlogging",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले साल तक, मैं दुनिया भर के अनोखे जगहों पर travel करते हुए अपने vlogs बनाऊंगा।",
+  "Key Grammar Point": "Future Perfect Continuous"
+}
+
+
+
+
+{
+  "Topic": "Pet Training",
+  "Prompt Language": "Hinglish",
+  "Starter": "अगले तीन महीनों तक, मैं अपने नए puppy को tricks सिखाते हुए, उसे super smart बनाऊंगा।",
+  "Key Grammar Point": "Future Perfect Continuous"
+}
+
+
+
+{
+  "Topic": "Mobile Gaming",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं game में अगली बार जरूर जीतूंगा",
+  "Key Grammar Point": "Future Simple"
+}
+
+
+{
+  "Topic": "Travel Dreams",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं next month south अफ्रीका जा रहा हूँ।",
+  "Key Grammar Point": "Future Simple"
+}
+
+
+{
+  "Topic": "Travel Dreams",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं अगले साल अपनी family के साथ Europe घूमने जाऊंगा।",
+  "Key Grammar Point": "Future Simple "
+}
+
+
+{
+  "Topic": "Book Reading",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं इस weekend वो नई book finish करूँगा।",
+  "Key Grammar Point": "Future Simple"
+}
+
+{
+  "Topic": "Professional Development",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं अगले साल एक online course के लिए enroll करूँगा।",
+  "Key Grammar Point": "Future Simple"
+}
+
+{
+  "Topic": "Home Improvement",
+  "Prompt Language": "Hinglish",
+  "Starter": "हम इस दिवाली पर अपने घर को repaint करवाएंगे।",
+  "Key Grammar Point": "Future Simple"
+}
+
+
+{
+  "Topic": "Gardening",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं अगले हफ्ते अपने garden में नए plants लगाऊंगा।",
+  "Key Grammar Point": "Future Simple"
+}
+
+
+{
+  "Topic": "Technology Upgrade",
+  "Prompt Language": "Hinglish",
+  "Starter": "हम अगले महीने एक नया laptop खरीदेंगे।",
+  "Key Grammar Point": "Future Simple"
+}
+
+{
+  "Topic": "Family Time",
+  "Prompt Language": "Hinglish",
+  "Starter": "हम इस sunday को picnic पर जाएंगे।",
+  "Key Grammar Point": "Future Simple"
+}
+
+
+{
+  "Topic": "Sustainable Living",
+  "Prompt Language": "Hinglish",
+  "Starter": "हम अगले साल से solar energy का use शुरू करेंगे।",
+  "Key Grammar Point": "Future Simple"
+}
+
+{
+  "Topic": "Rainy Evening",
+  "Prompt Language": "Hinglish",
+  "Starter": "कल शाम को, जब मैं घर पहुंचा, तो बारिश हो रही थी।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+
+
+{
+  "Topic": "Weekend Cooking",
+  "Prompt Language": "Hinglish",
+  "Starter": "पिछले sunday को, मैं दोपहर भर नई recipes try कर रहा था।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+
+
+{
+  "Topic": "Late Night Study",
+  "Prompt Language": "Hinglish",
+  "Starter": "Exam से एक रात पहले, मैं रात भर library में study कर रहा था।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+
+{
+  "Topic": "Morning Walk",
+  "Prompt Language": "Hinglish",
+  "Starter": "आज से ठीक एक साल पहले, मैं रोज़ सुबह park में walk किया करता था।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+
+{
+  "Topic": "Evening Walk",
+  "Prompt Language": "Hinglish",
+  "Starter": "कल शाम को, मैं पार्क में walk कर रहा था।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+{
+  "Topic": "Studying Late Night",
+  "Prompt Language": "Hinglish",
+  "Starter": "रात को दो बजे, मैं अपने exams के लिए study कर रहा था।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+
+
+{
+  "Topic": "Watching Movie",
+  "Prompt Language": "Hinglish",
+  "Starter": "बारिश हो रही थी और हम घर पर movie देख रहे थे।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+
+{
+  "Topic": "Gardening",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं सुबह अपने garden में plants को water दे रहा था।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+
+{
+  "Topic": "Playing Cricket",
+  "Prompt Language": "Hinglish",
+  "Starter": "हम लोग उस समय colony में cricket खेल रहे थे।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+
+{
+  "Topic": "Listening to Music",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं अपने room में लाइट्स बंद करके music सुन रहा था।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+
+
+{
+  "Topic": "Painting",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं वीकेंड पर अपनी living room की wall पर painting कर रही थी।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+{
+  "Topic": "Chatting with Friends",
+  "Prompt Language": "Hinglish",
+  "Starter": "हम लोग देर रात तक group chat पर बातें कर रहे थे।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+{
+  "Topic": "Practicing Guitar",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं शाम को अपनी balcony में guitar practice कर रहा था।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+
+{
+  "Topic": "Evening Walk",
+  "Prompt Language": "Hinglish",
+  "Starter": "कल शाम को, मैं पार्क में walk कर रहा था।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+{
+  "Topic": "Watching Movie",
+  "Prompt Language": "Hinglish",
+  "Starter": "बारिश हो रही थी और हम घर पर movie देख रहे थे।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+{
+  "Topic": "Gardening",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं सुबह अपने garden में plants को water दे रहा था।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+{
+  "Topic": "Playing Video Games",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं रात को अपने दोस्तों के साथ online video games खेल रहा था।",
+  "Key Grammar Point": "Past Continuous"
+}
+
+{
+  "Topic": "Movie Night",
+  "Prompt Language": "Hinglish",
+  "Starter": "हम movie शुरू करने से पहले, मैं पॉपकॉर्न बना चुका था।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+{
+  "Topic": "Online Shopping",
+  "Prompt Language": "Hinglish",
+  "Starter": "Sale end होने से पहले, मैंने अपनी wishlist के सभी items order कर दिए थे।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+{
+  "Topic": "Gaming Tournament",
+  "Prompt Language": "Hinglish",
+  "Starter": "Tournament शुरू होने से पहले, हमने सभी practice sessions complete कर लिए थे।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+{
+  "Topic": "Family Outing",
+  "Prompt Language": "Hinglish",
+  "Starter": "हम घर से निकलने से पहले, सभी mobile phones charge कर चुके थे।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+{
+  "Topic": "Long Drive",
+  "Prompt Language": "Hinglish",
+  "Starter": "Long drive पर निकलने से पहले, मैंने car की full servicing करवा ली थी।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+{
+  "Topic": "Tech Upgrade",
+  "Prompt Language": "Hinglish",
+  "Starter": "नया laptop खरीदने से पहले, मैंने सभी reviews पढ़ लिए थे।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+{
+  "Topic": "Festival Preparation",
+  "Prompt Language": "Hinglish",
+  "Starter": "Diwali की सफाई शुरू होने से पहले, हम पूरे घर को declutter कर चुके थे।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+
+{
+  "Topic": "Planting Season",
+  "Prompt Language": "Hinglish",
+  "Starter": "Monsoon आने से पहले, हमने garden में नए plants के लिए जगह बना ली थी।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+{
+  "Topic": "Marathon Participation",
+  "Prompt Language": "Hinglish",
+  "Starter": "Marathon पर जाने से पहले, मैंने registration process complete कर लिया था।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+{
+  "Topic": "Outdoor Camping",
+  "Prompt Language": "Hinglish",
+  "Starter": "Camping trip पर जाने से पहले, हमने tent और sleeping bags की checking कर ली थी।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+
+{
+  "Topic": "Guitar Learning",
+  "Prompt Language": "Hinglish",
+  "Starter": "First performance देने से पहले, मैंने सभी chords perfectly सीख लिए थे।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+
+
+{
+  "Topic": "Photography Skills",
+  "Prompt Language": "Hinglish",
+  "Starter": "Photo contest submit करने से पहले, मैंने advanced photography course पूरा कर लिया था।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+
+{
+  "Topic": "Music Concert",
+  "Prompt Language": "Hinglish",
+  "Starter": "Concert शुरू होने से पहले, हम tickets बुक कर चुके थे।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+
+{
+  "Topic": "Summer Camp",
+  "Prompt Language": "Hinglish",
+  "Starter": "Summer camp के लिए निकलने से पहले, मैंने सभी essentials pack कर लिए थे।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+
+
+{
+  "Topic": "Space Mission",
+  "Prompt Language": "Hinglish",
+  "Starter": "Rover Mars पर land हुआ, तब तक scientists data analysis कर चुके थे।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+
+
+
+{
+  "Topic": "Smart Farming",
+  "Prompt Language": "Hinglish",
+  "Starter": "Crop season शुरू होने तक, हम smart irrigation system install कर चुके थे।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+
+{
+  "Topic": "Water Conservation",
+  "Prompt Language": "Hinglish",
+  "Starter": "Monsoon season start होने तक, हम rainwater harvesting system setup कर चुके थे।",
+  "Key Grammar Point": "Past Perfect"
+}
+
+
+
+{
+  "Topic": "Long Drive",
+  "Prompt Language": "Hinglish",
+  "Starter": "जब हम destination पर पहुंचे, हम घंटों से गाड़ी चला रहे थे।",
+  "Key Grammar Point": "Past Perfect Continuous"
+}
+
+
+
+{
+  "Topic": "Exam Preparation",
+  "Prompt Language": "Hinglish",
+  "Starter": "Exam शुरू होने के समय तक, मैं हफ्तों से रोजाना पढ़ाई कर रहा था।",
+  "Key Grammar Point": "Past Perfect Continuous"
+}
+
+{
+  "Topic": "Building a Model",
+  "Prompt Language": "Hinglish",
+  "Starter": "जब model पूरा हुआ, मैं हफ्तों से उस पर काम कर रहा था।",
+  "Key Grammar Point": "Past Perfect Continuous"
+}
+
+{
+  "Topic": "Learning an Instrument",
+  "Prompt Language": "Hinglish",
+  "Starter": "पहली music performance से पहले, मैं महीनों से रोज़ practice कर रहा था।",
+  "Key Grammar Point": "Past Perfect Continuous"
+}
+
+
+{
+  "Topic": "Guitar Learning",
+  "Prompt Language": "Hinglish",
+  "Starter": "पहले guitar lesson से पहले, मैं हफ्तों से खुद से chords सीख रहा था।",
+  "Key Grammar Point": "Past Perfect Continuous"
+}
+
+{
+  "Topic": "Coding Project",
+  "Prompt Language": "Hinglish",
+  "Starter": "प्रोजेक्ट submission के समय तक, मैं रात दिन coding कर रहा था।",
+  "Key Grammar Point": "Past Perfect Continuous"
+}
+
+
+{
+  "Topic": "Playing Chess",
+  "Prompt Language": "Hinglish",
+  "Starter": "पहले चेस tournament में हिस्सा लेने से पहले, मैं महीनों से दोस्तों के साथ चेस खेल रहा था।",
+  "Key Grammar Point": "Past Perfect Continuous"
+}
+
+
+{
+  "Topic": "Sunrise Watching",
+  "Prompt Language": "Hinglish",
+  "Starter": "Hill-Top पर Sunrise देखने से पहले, हम सुबह 4 बजे से ट्रेक कर रहे थे।",
+  "Key Grammar Point": "Past Perfect Continuous"
+}
+
+{
+  "Topic": "Photography",
+  "Prompt Language": "Hinglish",
+  "Starter": "पहले photo exhibition में अपनी photos display करने से पहले, मैं नए locations पर shoot कर रहा था।",
+  "Key Grammar Point": "Past Perfect Continuous"
+}
+
+{
+  "Topic": "Swimming Competition",
+  "Prompt Language": "Hinglish",
+  "Starter": "पहले swimming competition में compete करने से पहले, मैं हफ्तों से रोज़ pool में practice कर रहा था।",
+  "Key Grammar Point": "Past Perfect Continuous"
+}
+
+
+{
+  "Topic": "Cricket Training",
+  "Prompt Language": "Hinglish",
+  "Starter": "पहले district level cricket match में खेलने से पहले, मैं महीनों से सुबह जल्दी उठकर practice कर रहा था।",
+  "Key Grammar Point": "Past Perfect Continuous"
+}
+
+{
+  "Topic": "Rangoli Competition",
+  "Prompt Language": "Hinglish",
+  "Starter": "पहले Rangoli competition में participate करने से पहले, हम हफ्तों से designs practice कर रहे थे।",
+  "Key Grammar Point": "Past Perfect Continuous"
+}
+
+
+{
+  "Topic": "Dance Rehearsal",
+  "Prompt Language": "Hinglish",
+  "Starter": "स्कूल के annual function में perform करने से पहले, हम सप्ताहों से रोज़ dance practice कर रहे थे।",
+  "Key Grammar Point": "Past Perfect Continuous"
+}
+
+
+{
+  "Topic": "Science Project",
+  "Prompt Language": "Hinglish",
+  "Starter": "Science fair से एक दिन पहले तक, हम अपने project पर लगातार काम कर रहे थे।",
+  "Key Grammar Point": "Past Perfect Continuous"
+}
+
+
+{
+    "Topic": "New Skills",
+    "Prompt Language": "Hinglish",
+    "Starter": "मैंने इस lockdown में नया guitar बजाना सीख लिया है।",
+    "Key Grammar Point": "Present Perfect"
+  }
+
+{
+  "Topic": "Travel Memories",
+  "Prompt Language": "Hinglish",
+  "Starter": "हमने अब तक India के पाँच खूबसूरत hill stations घूम लिए हैं।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+
+{
+  "Topic": "Movie Marathon",
+  "Prompt Language": "Hinglish",
+  "Starter": "हमने इस weekend पर Marvel की सभी movies देख ली हैं।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Reading Habit",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैंने इस साल पाँच novels पढ़ लिए हैं।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Planting Trees",
+  "Prompt Language": "Hinglish",
+  "Starter": "हमने इस महीने अपने garden में दस नए plants लगा लिए हैं।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Learning Languages",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैंने Spanish और French दोनों में basic conversation सीख लिया है।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Adventure Sports",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैंने New Zealand में bungee jumping और Australia में scuba diving कर लिया है।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Adventure Sports",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैंने पहली बार bungee jumping try की है।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Cultural Festivals",
+  "Prompt Language": "Hinglish",
+  "Starter": "हमने अब तक Rajasthan के सभी major festivals attend किए हैं।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Cuisine Tasting",
+  "Prompt Language": "Hinglish",
+  "Starter": "हमने Kerala की traditional dishes को try किया है।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Wildlife Safari",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैंने Jim Corbett National Park में wildlife safari की है।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Mountain Trekking",
+  "Prompt Language": "Hinglish",
+  "Starter": "हमने Uttarakhand में treks complete किए हैं।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Beach Holidays",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैंने Goa के सभी famous beaches पर time spend किया है।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Road Trips",
+  "Prompt Language": "Hinglish",
+  "Starter": "हमने Mumbai से Goa तक का road trip किया है।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Local Homestays",
+  "Prompt Language": "Hinglish",
+  "Starter": "हमने Sikkim में local homestays में रहकर culture को closely experience किया है।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+{
+  "Topic": "Scuba Diving",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैंने Andaman में scuba diving करके underwater world explore किया है।",
+  "Key Grammar Point": "Present Perfect"
+}
+
+
+{
+  "Topic": "Travel Blogging",
+  "Prompt Language": "Hinglish",
+  "Starter": "हम पिछले एक साल से travel blogging कर रहे हैं।",
+  "Key Grammar Point": "Present Perfect Continuous"
+}
+
+
+{
+  "Topic": "Learning Photography",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं पिछले छह महीनों से photography सीख रहा हूँ।",
+  "Key Grammar Point": "Present Perfect Continuous"
+}
+
+
+
+{
+  "Topic": "Studying Abroad",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं पिछले दो साल से abroad में study कर रहा हूँ।",
+  "Key Grammar Point": "Present Perfect Continuous"
+}
+
+{
+  "Topic": "Exploring Hiking Trails",
+  "Prompt Language": "Hinglish",
+  "Starter": "हम पिछले चार महीनों से नए hiking trails explore कर रहे हैं।",
+  "Key Grammar Point": "Present Perfect Continuous"
+}
+
+{
+  "Topic": "Learning a New Language",
+  "Prompt Language": "Hinglish",
+  "Starter": "मैं पिछले पाँच महीने से Spanish सीख रहा हूँ।",
+  "Key Grammar Point": "Present Perfect Continuous"
+}
+
+
+{
+  "Topic": "Meditation Routine",
+  "Prompt Language": "Hinglish",
+  "Starter": "हम पिछले दो महीने से रोज़ सुबह मेडिटेशन कर रहे हैं।",
+  "Key Grammar Point": "Present Perfect Continuous"
+}
+
+
+
+
+
+

@@ -12,11 +12,10 @@ from google.oauth2.service_account import Credentials
 from google.cloud import texttospeech
 import asyncio
 import json
-import os
-#import boto3
+from collections import Counter
+import re
 import threading
 import time
-import requests
 # SQLite Setup
 conn = sqlite3.connect('users.db')
 cursor = conn.cursor()
@@ -112,9 +111,49 @@ def insert_question(conn, question_string):
 
 # define insert questions here so that we can take all the questions from a json and put them in the database.
 
+# Initialize an empty list to store all entries
+json_data = []
+
+# Read the JSON entries from the file
+with open('selectedv1.txt', 'r') as file:
+    file_content = file.read().strip()
+    # Correctly identify and add missing braces for the first and last JSON objects if necessary
+    if not file_content.startswith('{'):
+        file_content = '{' + file_content
+    if not file_content.endswith('}'):
+        file_content += '}'
+    
+    # Use regex to split the content, ensuring we account for the start and end of the file
+    json_blocks = re.split(r'}\s*{', file_content)
+    
+    # Process each block to ensure it is valid JSON
+    for i, block in enumerate(json_blocks):
+        # Add missing curly braces if they were removed by the split, specifically for blocks not at the ends
+        if i != 0:  # For blocks that are not the first, add an opening brace
+            block = '{' + block
+        if i != len(json_blocks) - 1:  # For blocks that are not the last, add a closing brace
+            block += '}'
+        
+        try:
+            # Parse the block as JSON and add it to our list
+            json_data.append(json.loads(block))
+        except json.JSONDecodeError as e:
+            print(f"Error decoding JSON block at index {i}: {e}")
+
+# # Extract the "Key Grammar Point" entries
+# for entry in json_data:
+#     print(entry['Starter'])
+#     print(entry['Topic'])
+# for entry in json_data:    
+#     print(entry['Key Grammar Point'])
 
 
+# Convert the entry of json_data Starter and Key Grammar Point into a concatenation with a new line
+question_strings = [f"Starter: {entry['Starter']}\nKey Grammar Point: {entry['Key Grammar Point']}" for entry in json_data]
 
+# Append the question strings to the all_questions table
+for question_string in question_strings:
+    insert_question(conn, question_string)
 
 
 
@@ -273,24 +312,13 @@ def get_question(user_id):
 
 
 tools = [
-    {
-        "type": "function",
-        "function": {
-        "name": "get_question",
-        "description": "Get the current weather in a given location",
-        "parameters": {
-            "type": "object",
-            "properties": {
-            "location": {
-                "type": "string",
-                "description": "The city and state, e.g. San Francisco, CA",
+        {
+            "type": "function",
+            "function": {
+                "name": "next_question",
+                "description": "Get the next question",
             },
-            "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
-            },
-            "required": ["location"],
-        },
         }
-    }
     ]
 
 
@@ -305,11 +333,14 @@ async def handle_stream(client, message_history_object, tools,update: Update, co
     buffer_size = 70  # Maximum buffer size, but we'll also look for natural breakpoints
     #below thing is going to be responsible to make the initial prompt to the chat bot.
     stream = await client.chat.completions.create(
-        model='gpt-3.5-turbo',
+        model='gpt-3.5-turbo-0125',
         messages=message_history_object,
+        max_tokens=4095,
+        top_p=1,
+        frequency_penalty=0,
+        presence_penalty=0,
         tools=tools,
         tool_choice="auto",
-        temperature=0.5,
         stream=True
     ) 
     async for chunk in stream:
@@ -448,7 +479,17 @@ async def chat(update: Update, context: CallbackContext) -> int:
 
     # Call OpenAI with the entire history
     
-    message_history_object = [{'role': 'system', 'content': 'You are a helpful assistant.'}]
+    message_history_object = [
+    {
+      "role": "system",
+      "content": "You are a English teaching bot, you job is to engage with the user and ask them to translate a starter prompt(which will be mentioned). eg\n\"Starter\": \"कल रात को तुम क्या कर रहे थे?\"\n\nBot: हैलो! Today, we'll practice translating Hindi sentences into English, focusing on the past continuous tense. Ready to begin?\n\nUser: Yes, I'm ready.\n\nBot: Fantastic! Let's start with this sentence: \"कल रात को तुम क्या कर रहे थे?\" Please translate it into English.\n\nUser: What were you doing last night?\n\nBot: Excellent! That's a perfect translation. You correctly used \"were\" with \"doing\" to form the past continuous tense, which is exactly how we describe actions that were happening at a specific time in the past. Now, for a bit of a challenge, try this one: \"जब मैंने फोन किया, तुम क्या कर रहे थे?\"\n\nUser: When I was calling, what were you doing?\n\nBot: Almost there! A more natural way to say it in English would be, \"What were you doing when I called?\" This keeps the focus on the action that was happening at the time of the call. Remember, the structure often flips when translating from Hindi to English to maintain the natural flow of the sentence.\n\nUser: Got it. Can I try another one?\n\nBot: Of course! Here's your next sentence: \"वह खाना बना रही थी जब मैं घर पहुंचा।\"\n\nUser: She was cooking food when I reached home.\n\nBot: Perfect! You nailed it. \"She was cooking\" is the correct use of the past continuous tense, and \"when I reached home\" correctly sets the time of the action. Excellent work!\n\nand try intermix english words in the sentence(making it like hinglish) , basically don't use difficult hindi words.\neg. \"पहले photo exhibition में अपनी photos display करने से पहले, मैं नए locations पर shoot कर रहा था।\" And the starter is not visible to the user, it will be provided as a system prompt, once it is provided stick with it. Once the user has provided the right answer move on to next question by execution a function called next_question,Remember  NEVER ASK THE QUESTION YOUR SELF JUST CALL THE TOOL (next_question) however if you think that user does not understand the given question then you can ask some modification or a variation, which will add a new system prompt to the context, so you could see a pattern of system prompts and user responses in the context and then another system prompt which is the next question. Do not tell the user what tense or grammer rule they will be using let them figure it out on their own."
+
+    },
+    {
+      "role": "system",
+      "content": "Starter : \"स्कूल के annual function में perform करने से पहले, हम सप्ताहों से रोज़ dance practice कर रहे थे।\",\nKey Grammar Point : \"Past Perfect Continuous\""
+    }
+  ]
     # we need to stuff our question and the history of messages here.
 
     for i in context.user_data['last_10_turns']:
@@ -470,8 +511,8 @@ async def chat(update: Update, context: CallbackContext) -> int:
 
         # make sure that we have a smooth flow from one question to another, put that in the main prompt.
     
-        new_que_prompt = ""    
-        message_history_object.append({'role': 'assitant', 'content': new_que_prompt+ str(question)})
+        #new_que_prompt = ""    
+        message_history_object.append({'role': 'system', 'content': "\n" +str(question)})
 
 
         await handle_stream(client, message_history_object, tools,update, context)
@@ -521,8 +562,6 @@ def main():
     application.add_handler(conv_handler)
     application.run_polling(allowed_updates=Update.ALL_TYPES)
     backup_interval = 1000  # Backup every hour (3600 seconds)
-    backup_file = 'inmembackup.db'
-
 
     # Start the backup thread
     backup_thread = threading.Thread(target=periodic_backup, args=(conn_mem, backup_interval, backup_file), daemon=True)
