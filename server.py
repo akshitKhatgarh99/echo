@@ -152,8 +152,10 @@ with open('selectedv1.txt', 'r') as file:
 question_strings = [f"Starter: {entry['Starter']}\nKey Grammar Point: {entry['Key Grammar Point']}" for entry in json_data]
 
 # Append the question strings to the all_questions table
+
+
 for question_string in question_strings:
-    insert_question(conn, question_string)
+    insert_question(conn_mem, question_string)
 
 
 
@@ -496,7 +498,7 @@ async def chat(update: Update, context: CallbackContext) -> int:
         if i['is_from_user']:
             message_history_object.append({'role': 'user', 'content': str(i['message'])})
         else:
-            message_history_object.append({'role': 'assitant', 'content': str(i['message'])})
+            message_history_object.append({'role': 'assistant', 'content': str(i['message'])})
 
     message_history_object.append({'role': 'user', 'content': str(user_text)})
 
@@ -518,26 +520,25 @@ async def chat(update: Update, context: CallbackContext) -> int:
         await handle_stream(client, message_history_object, tools,update, context)
             
                 
-                
-
-    # Keep only the last 10 turns
+    # Keep only the last 20 turns
 
 
-    if len(context.user_data['last_10_turns']) >= 20:
+    if len(context.user_data['last_10_turns']) >= 40:
 
         cursor = conn_mem.cursor()
-        # Write the first 10 turns to the database.
-        for turn in context.user_data['last_10_turns'][:10]:
+        # Write the first 20 turns to the database.
+        for turn in context.user_data['last_10_turns'][:20]:
             cursor.execute(
                 'INSERT INTO chat_history (user_id, timestamp, is_from_user, is_audio, message, audio_blob) VALUES (?, ?, ?, ?, ?, ?)',
                 (user_id, turn['timestamp'], turn['is_from_user'], turn['is_audio'], turn['message'], turn['audio_blob'])
             )
         conn_mem.commit()
         # Keep the last 10 turns in the buffer.
-        context.user_data['last_10_turns'] = context.user_data['last_10_turns'][10:]
+        context.user_data['last_10_turns'] = context.user_data['last_10_turns'][20:]
 
     return CHAT
 
+    
 async def cancel(update: Update, context: CallbackContext) -> int:
     await update.message.reply_text('Goodbye!')
     return ConversationHandler.END
