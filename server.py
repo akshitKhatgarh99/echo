@@ -68,17 +68,17 @@ backup_database(conn_mem, backup_file)
 
 cursor = conn_mem.cursor()
 
-# Create table for all questions
+# Create table for all questions if not exists
 cursor.execute('''
-CREATE TABLE all_questions (
+CREATE TABLE IF NOT EXISTS all_questions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     question_string TEXT
 );
 ''')
 
-# Create table to track asked questions
+# Create table to track asked questions if not exists
 cursor.execute('''
-CREATE TABLE asked_questions (
+CREATE TABLE IF NOT EXISTS asked_questions (
     user_id TEXT,
     question_id INTEGER,
     FOREIGN KEY(question_id) REFERENCES all_questions(id)
@@ -291,7 +291,9 @@ async def handle_contact(update: Update, context: CallbackContext) -> int:
     async with aiosqlite.connect('users.db') as db:
         await db.execute("UPDATE users SET phone_number = ?, state = ? WHERE id = ?", (phone_number, 'CHAT', user_id))
         await db.commit()
-    await update.message.reply_text(f'Saved your phone number: {phone_number}')
+    await update.message.reply_text(f'Thanks for providing your phone number.')
+    await update.message.reply_text('Welcome to our English Tutor Bot you will be given sentences in Hindi and you will have to translate them to english, our Bot understands both Hindi and english really well, you can use voice or text to chat with the bot, we recommend using voice as it will give you a natural feel of the language')
+
     return CHAT
 
 
@@ -329,12 +331,8 @@ tools = [
 async def handle_stream(client, message_history_object, tools,update: Update, context: CallbackContext):
 
     timestamp = datetime.now(timezone.utc).isoformat()
-    buffer = []
-    # we need to fix this buffer size thing. make sure if the final buffer is less than 30 you also give output.
-    buffer_size_min = 30  # Minimum buffer size, we'll wait for a sentence ending
-    buffer_size = 70  # Maximum buffer size, but we'll also look for natural breakpoints
-    #below thing is going to be responsible to make the initial prompt to the chat bot.
-    stream = await client.chat.completions.create(
+    
+    response = await client.chat.completions.create(
         model='gpt-3.5-turbo-0125',
         messages=message_history_object,
         max_tokens=4095,
@@ -342,94 +340,38 @@ async def handle_stream(client, message_history_object, tools,update: Update, co
         frequency_penalty=0,
         presence_penalty=0,
         tools=tools,
-        tool_choice="auto",
-        stream=True
+        tool_choice="auto"
     ) 
-    async for chunk in stream:
-        if  chunk.choices[0].delta.content != None:
 
 
-            content = chunk.choices[0].delta.content
-            buffer.append(content)
+    if response.choices[0].finish_reason == "tool_calls":
+        return True
 
 
-            # Check if the buffer has reached the size limit or contains a sentence ending
-            if len(buffer)>= buffer_size_min and (len(buffer) >= buffer_size or any(punct in content for punct in ['.', ',',';', '?'])):
-                message = "".join(buffer)
-                logger.info(f"Sending reply: {message}")
-                #await update.message.reply_text(message)
-                buffer = []  # Reset buffer after sending message
+    # Get the response from OpenAI
+    response_text = response.choices[0].message.content
 
-                bot_response_text = texttospeech.SynthesisInput(text=message)
-                
-                response = await synthesize_speech_async(bot_response_text)
-
-                
-                # Reply with the audio
-                await update.message.reply_voice(voice=response.audio_content)
-                
-                # Update user data for sent message
-                context.user_data['last_10_turns'].append({
-                    'timestamp': timestamp,
-                    'is_from_user': False,
-                    'is_audio': True,
-                    'message': bot_response_text,
-                    'audio_blob': response.audio_content
-                })
-
-        
-        # the below two if satements have same body just different return values.
-                
-        if chunk.choices[0].finish_reason == "tool_calls":
-            message = "".join(buffer)
-            logger.info(f"Sending reply: {message}")
-            #await update.message.reply_text(message)
-            buffer = []  # Reset buffer after sending message
-
-            bot_response_text = texttospeech.SynthesisInput(text=message)
+    bot_response_text = texttospeech.SynthesisInput(text=response_text)
+    #record this in the logs
+    logger.info(f"Role: assistant, Content: {response_text}")
             
-            response = await synthesize_speech_async(bot_response_text)
+    response = await synthesize_speech_async(bot_response_text)
 
-            
-            # Reply with the audio
-            await update.message.reply_voice(voice=response.audio_content)
-            
-            # Update user data for sent message
-            context.user_data['last_10_turns'].append({
-                'timestamp': timestamp,
-                'is_from_user': False,
-                'is_audio': True,
-                'message': bot_response_text,
-                'audio_blob': response.audio_content
-            })
+    
+    # Reply with the audio
+    await update.message.reply_voice(voice=response.audio_content)
+    
+    # Update user data for sent message
+    context.user_data['last_10_turns'].append({
+        'timestamp': timestamp,
+        'is_from_user': False,
+        'is_audio': True,
+        'message': bot_response_text,
+        'audio_blob': response.audio_content,
+        'is_system': False
+    })
 
-
-            return True
-        
-        if chunk.choices[0].finish_reason == "stop":
-            message = "".join(buffer)
-            logger.info(f"Sending reply: {message}")
-            #await update.message.reply_text(message)
-            buffer = []  # Reset buffer after sending message
-
-            bot_response_text = texttospeech.SynthesisInput(text=message)
-            
-            response = await synthesize_speech_async(bot_response_text)
-
-            
-            # Reply with the audio
-            await update.message.reply_voice(voice=response.audio_content)
-            
-            # Update user data for sent message
-            context.user_data['last_10_turns'].append({
-                'timestamp': timestamp,
-                'is_from_user': False,
-                'is_audio': True,
-                'message': bot_response_text,
-                'audio_blob': response.audio_content
-            })
-
-            return False
+    return False
 
    
 
@@ -473,7 +415,8 @@ async def chat(update: Update, context: CallbackContext) -> int:
         'is_from_user': True,
         'is_audio': False,
         'message': user_text,
-        'audio_blob': None
+        'audio_blob': None,
+        'is_system': False
     })
 
 
@@ -484,21 +427,26 @@ async def chat(update: Update, context: CallbackContext) -> int:
     message_history_object = [
     {
       "role": "system",
-      "content": "You are a English teaching bot, you job is to engage with the user and ask them to translate a starter prompt(which will be mentioned). eg\n\"Starter\": \"कल रात को तुम क्या कर रहे थे?\"\n\nBot: हैलो! Today, we'll practice translating Hindi sentences into English, focusing on the past continuous tense. Ready to begin?\n\nUser: Yes, I'm ready.\n\nBot: Fantastic! Let's start with this sentence: \"कल रात को तुम क्या कर रहे थे?\" Please translate it into English.\n\nUser: What were you doing last night?\n\nBot: Excellent! That's a perfect translation. You correctly used \"were\" with \"doing\" to form the past continuous tense, which is exactly how we describe actions that were happening at a specific time in the past. Now, for a bit of a challenge, try this one: \"जब मैंने फोन किया, तुम क्या कर रहे थे?\"\n\nUser: When I was calling, what were you doing?\n\nBot: Almost there! A more natural way to say it in English would be, \"What were you doing when I called?\" This keeps the focus on the action that was happening at the time of the call. Remember, the structure often flips when translating from Hindi to English to maintain the natural flow of the sentence.\n\nUser: Got it. Can I try another one?\n\nBot: Of course! Here's your next sentence: \"वह खाना बना रही थी जब मैं घर पहुंचा।\"\n\nUser: She was cooking food when I reached home.\n\nBot: Perfect! You nailed it. \"She was cooking\" is the correct use of the past continuous tense, and \"when I reached home\" correctly sets the time of the action. Excellent work!\n\nand try intermix english words in the sentence(making it like hinglish) , basically don't use difficult hindi words.\neg. \"पहले photo exhibition में अपनी photos display करने से पहले, मैं नए locations पर shoot कर रहा था।\" And the starter is not visible to the user, it will be provided as a system prompt, once it is provided stick with it. Once the user has provided the right answer move on to next question by execution a function called next_question,Remember  NEVER ASK THE QUESTION YOUR SELF JUST CALL THE TOOL (next_question) however if you think that user does not understand the given question then you can ask some modification or a variation, which will add a new system prompt to the context, so you could see a pattern of system prompts and user responses in the context and then another system prompt which is the next question. Do not tell the user what tense or grammer rule they will be using let them figure it out on their own."
+      "content": "You are a English teaching bot, you job is to engage with the user and ask them to translate a starter prompt(which will be mentioned). eg\n\"Starter\": \"कल रात को तुम क्या कर रहे थे?\"\n\nBot: हैलो! Today, we'll practice translating Hindi sentences into English, focusing on the past continuous tense. Ready to begin?\n\nUser: Yes, I'm ready.\n\nBot: Fantastic! Let's start with this sentence: \"कल रात को तुम क्या कर रहे थे?\" Please translate it into English.\n\nUser: What were you doing last night?\n\nBot: Excellent! That's a perfect translation. You correctly used \"were\" with \"doing\" to form the past continuous tense, which is exactly how we describe actions that were happening at a specific time in the past. Now, for a bit of a challenge, try this one: \"जब मैंने फोन किया, तुम क्या कर रहे थे?\"\n\nUser: When I was calling, what were you doing?\n\nBot: Almost there! A more natural way to say it in English would be, \"What were you doing when I called?\" This keeps the focus on the action that was happening at the time of the call. Remember, the structure often flips when translating from Hindi to English to maintain the natural flow of the sentence.\n\nUser: Got it. Can I try another one?\n\nBot: Of course! Here's your next sentence: \"वह खाना बना रही थी जब मैं घर पहुंचा।\"\n\nUser: She was cooking food when I reached home.\n\nBot: Perfect! You nailed it. \"She was cooking\" is the correct use of the past continuous tense, and \"when I reached home\" correctly sets the time of the action. Excellent work!\n\nand try intermix english words in the sentence(making it like hinglish) , basically don't use difficult hindi words.\neg. \"पहले photo exhibition में अपनी photos display करने से पहले, मैं नए locations पर shoot कर रहा था।\" And the starter is not visible to the user, it will be provided as a system prompt, once it is provided stick with it. Once the user has provided the right answer move on to next question by execution a function called next_question,Remember  NEVER ASK THE QUESTION YOUR SELF JUST CALL THE TOOL (next_question) however if you think that user does not understand the given question then you can ask some modification or a variation, which will add a new system prompt to the context, so you could see a pattern of system prompts and user responses in the context and then another system prompt which is the next question. DO NOT TELL THE USERS THE KEY GRAMMAR POINT, IT IS ONLY FOR YOUR REFERENCE."
 
-    },
-    {
-      "role": "system",
-      "content": "Starter : \"स्कूल के annual function में perform करने से पहले, हम सप्ताहों से रोज़ dance practice कर रहे थे।\",\nKey Grammar Point : \"Past Perfect Continuous\""
     }
+    # ,
+    # {
+    #   "role": "system",
+    #   "content": "Starter : \"स्कूल के annual function में perform करने से पहले, हम सप्ताहों से रोज़ dance practice कर रहे थे।\",\nKey Grammar Point : \"Past Perfect Continuous\""
+    # }
   ]
     # we need to stuff our question and the history of messages here.
 
     for i in context.user_data['last_10_turns']:
         if i['is_from_user']:
             message_history_object.append({'role': 'user', 'content': str(i['message'])})
+        
         else:
-            message_history_object.append({'role': 'assistant', 'content': str(i['message'])})
+            if i['is_system']:
+                message_history_object.append({'role': 'system', 'content': str(i['message'])})
+            else:    
+                message_history_object.append({'role': 'assistant', 'content': str(i['message'])})
 
     message_history_object.append({'role': 'user', 'content': str(user_text)})
 
@@ -507,7 +455,7 @@ async def chat(update: Update, context: CallbackContext) -> int:
     if tool_called:
         # modify this above object to include the tool call.
         question = get_question(update.message.from_user.id)
-        if question is not None:
+        if question is  None:
             print("question should be asked, error line 434")
         
 
@@ -515,7 +463,19 @@ async def chat(update: Update, context: CallbackContext) -> int:
     
         #new_que_prompt = ""    
         message_history_object.append({'role': 'system', 'content': "\n" +str(question)})
+        context.user_data['last_10_turns'].append({
+                    'timestamp': timestamp,
+                    'is_from_user': False,
+                    'is_audio': True,
+                    'message': question,
+                    'audio_blob': None,
+                    'is_system': True
+                })
 
+
+        # Log the message history
+        for turn in message_history_object:
+            logger.info(f"Role: {turn['role']}, Content: {turn['content']}")
 
         await handle_stream(client, message_history_object, tools,update, context)
             
@@ -546,7 +506,7 @@ async def cancel(update: Update, context: CallbackContext) -> int:
 def main():
     request = HTTPXRequest(connection_pool_size=5, read_timeout=10)
 
-    application = Application.builder().token("6352196605:AAFdzmqpYgmn2kM00rNTI_vOrFO08BuVTFg").request(request).build()
+    application = Application.builder().token("7118532465:AAG11ra2He1jO8KVsUzSJdQ4uKkfGACxNW4").request(request).build()
     application.bot_data['request'] = request
     any_text_handler = MessageHandler(filters.TEXT & ~filters.COMMAND, start) 
     any_voice_handler = MessageHandler(filters.VOICE, start)  # Add this line
